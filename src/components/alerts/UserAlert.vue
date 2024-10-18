@@ -1,9 +1,9 @@
 <template>
     <n-space vertical :size="12">
-        <n-alert class="alert" :title="userInfo ? `${userInfo.emoji} ${userInfo.name}` : 'Error'" :show-icon="false"
+        <n-alert class="alert" :title="user ? `${user.emoji} ${user.name}` : 'Error'" :show-icon="false"
             :type="alertType">
-            <div v-if="userInfo && alertType == 'success'" class="alert-content">joined the room </div>
-            <div v-if="userInfo && alertType == 'error'" class="alert-content">left the room </div>
+            <div v-if="user && alertType == 'success'" class="alert-content">joined the room </div>
+            <div v-if="user && alertType == 'error'" class="alert-content">left the room </div>
             <div v-if="alertType == 'error'" class="alert-content">{{ message }}</div>
         </n-alert>
     </n-space>
@@ -14,7 +14,7 @@
 
 export default {
     props: {
-        userInfo: {
+        user: {
             type: {},
             default: null
         },

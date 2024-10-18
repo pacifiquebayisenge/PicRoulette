@@ -1,7 +1,7 @@
 require('dotenv').config()
 const { createClient } = require('@supabase/supabase-js')
 
-const supabaseUrl = 'https://zpxdzxlnrsfdwqdufrzs.supabase.co'
+const supabaseUrl = process.env.SUPABASE_URL
 const supabaseKey = process.env.SUPABASE_KEY
 const supabase = createClient(supabaseUrl, supabaseKey)
 
@@ -22,7 +22,7 @@ const uploadToSupabase = async (fileData) => {
     if (existingFiles.length > 0) {
       // File already exists, return its URL
       console.log(`File ${name} already exists, skipping upload.`)
-      return `${supabaseUrl}/storage/v1/object/public/images/public/${name}`
+      return `${supabaseUrl}/storage/v1/object/images/public/${name}`
     }
 
     // Upload the buffer directly to Supabase
@@ -73,7 +73,7 @@ const deleteAllFilesFromSupabase = async () => {
   }
 }
 
-async function getFilesStartingWith(userId) {
+const getFilesStartingWith = async (userId) => {
   try {
     // List all files in the specified bucket
     const { data: files, error: listError } = await supabase.storage
@@ -98,11 +98,47 @@ async function getFilesStartingWith(userId) {
   }
 }
 
+const getGameImages = async (users) => {
+  try {
+    const usersArray = Object.values(users)
+
+    // List all files in the specified bucket
+    const { data: files, error: listError } = await supabase.storage
+      .from('images')
+      .list('public/', { limit: 1000 })
+
+    if (listError) throw listError
+
+    const gameList = files
+      .map((file) => {
+        const player = usersArray.find((user) => user.id == file.name.split(':')[0])
+
+        return player
+          ? {
+              ...player,
+              file: {
+                id: file.id,
+                url: `${supabaseUrl}/storage/v1/object/images/public/${file.name}`
+                // https://zpxdzxlnrsfdwqdufrzs.supabase.co/storage/v1/object/public/images/public/nOYkXno37ULhAAiBAAAD:Capture2.PNG
+              }
+            }
+          : null // Return null if player is not found
+      })
+      .filter((item) => item !== null) // Filter out null entries
+
+    return gameList
+  } catch (error) {
+    console.error('Error retrieving files:', error)
+    return []
+  }
+}
+
 // Create a Supabase object to encapsulate the methods
 const SUPERBASE = {
   uploadToSupabase,
   deleteAllFilesFromSupabase,
-  getFilesStartingWith
+  getFilesStartingWith,
+  getGameImages
 }
 
 module.exports = SUPERBASE

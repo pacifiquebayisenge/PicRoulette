@@ -5,14 +5,14 @@
     </header>
 
     <!-- Ask for the user's name if not yet set -->
-    <div v-if="!userInfo" class="container">
+    <div v-if="!user" class="container">
       <n-input v-model:value="name" type="text" size="large" :maxlength="15"
         :placeholder="getPlaceholder || 'Enter your name'" />
       <n-button @click="connectToSocket">Connect</n-button>
     </div>
 
     <!-- Show the comment input if connected -->
-    <div v-if="userInfo" class="container">
+    <div v-if="user" class="container">
       <n-input v-model:value="comment" type="textarea" placeholder="Enter your comment" :maxlength="150" :autosize="{
         minRows: 2,
         maxRows: 3
@@ -31,7 +31,7 @@
 
 
           <div>
-            <n-gradient-text :type="comment.id === userInfo.id ? 'success' : 'info'">
+            <n-gradient-text :type="comment.id === user.id ? 'success' : 'info'">
               {{ comment.message }}
             </n-gradient-text>
           </div>
@@ -39,7 +39,7 @@
       </div>
     </div>
 
-    <div v-if="userInfo" class="images-container">
+    <div v-if="user" class="images-container">
       <h2>Upload images</h2>
 
       <n-upload :disabled="successUpload >= 15" :min="5" :multiple="true" :show-file-list="false"
@@ -51,7 +51,7 @@
 
 
 
-    <div v-if="userInfo" class="progress-container">
+    <div v-if="user" class="progress-container">
       <n-progress v-if="uploadProgress" type="line" color="#36ad6a" :percentage="uploadProgress"
         indicator-placement="inside" processing />
       Images Uploaded {{ successUpload }}
@@ -59,7 +59,7 @@
 
     <!-- Display active users count and names -->
     <div v-if="activeUsers.length" class="active-users-container">
-      <h2>Active Users ({{ userCount }}):</h2>
+      <h2>Active Users ({{ activeUsers.length }}):</h2>
 
       <div>
         <div v-for="(user, index) in activeUsers" :key="index" class="user-component">
@@ -86,12 +86,14 @@
 
 <script>
 import { h, nextTick } from 'vue'; // Import h function
-import { io } from 'socket.io-client';
+// import { io } from 'socket.io-client';
 import { useNotification } from 'naive-ui';
 import { namelist } from '@/data/names';
 import UserAlert from './alerts/UserAlert.vue';
 import { toRaw } from 'vue';
 import { MAX_IMAGE_UPLOAD } from '@/constants';
+import socketService from '@/services/socketService';
+import userService from '@/services/userService';
 
 export default {
   data() {
@@ -100,10 +102,9 @@ export default {
       name: '',
       comment: '',
       comments: [],
-      userCount: 0,
       activeUsers: [],
       isLoading: false,
-      userInfo: null,
+      user: null,
       namelist,
       totalFiles: 0, // total images user want to upload 
       imagePreviews: [], // Stores the base64 image previews
@@ -134,15 +135,15 @@ export default {
     connectToSocket() {
       if (this.name) {
         this.isLoading = true
-        this.socket = io('http://localhost:3001/', {
-          query: { name: this.name }, // Send the name with the connection
-        });
+        this.socket = socketService.connect(this.name)
 
         // Listen for user info from the server
         this.socket.on('userInfo', (data) => {
           this.isLoading = false;
-          this.userInfo = data; // Store user info received from the server
-          this.userJoinedAlert(data)
+          userService.setUser(data.name, data.id, data.emoji, data.imageCount)
+          this.user = userService.getUser(); // Store user info received from the server
+          this.userJoinedAlert(this.user)
+          // this.$router.push('/game')
         });
 
         // Handle connection error
@@ -162,9 +163,8 @@ export default {
 
         // Listen for active users update from the server
         this.socket.on('activeUsers', (data) => {
-          this.userCount = data.count;
-          this.activeUsers = data.users;
-          console.log(data)
+          userService.setUserList(data.users)
+          this.activeUsers = userService.getUserList()
         });
 
         // Listen for active users update from the server
@@ -181,6 +181,13 @@ export default {
         });
 
         // Listen for disconnect event
+        this.socket.on('allReady', (data) => {
+          console.log(data)
+          this.$router.push('/game')
+
+        });
+
+        // Listen for disconnect event
         this.socket.on('disconnected', (data) => {
           this.userLeftAlert(data)
           console.log('Disconnected from server');
@@ -192,20 +199,20 @@ export default {
     sendComment() {
       if (this.comment) {
         this.socket.emit('comment', {
-          id: this.userInfo.id,
-          name: this.userInfo.name,
-          emoji: this.userInfo.emoji,
+          id: this.user.id,
+          name: this.user.name,
+          emoji: this.user.emoji,
           message: this.comment,
         });
         this.comment = ''; // Clear the input after sending
       }
     },
 
-    userJoinedAlert(userInfo) {
+    userJoinedAlert(user) {
       // Use the notification instance from setup
       this.notification.create({
         content: () => h(UserAlert, {
-          userInfo,
+          user,
           alertType: 'success'
         }),
         duration: 3000,
@@ -213,11 +220,11 @@ export default {
       });
     },
 
-    userLeftAlert(userInfo) {
+    userLeftAlert(user) {
       // Use the notification instance from setup
       this.notification.create({
         content: () => h(UserAlert, {
-          userInfo,
+          user,
           alertType: 'error'
         }),
         duration: 3000,
@@ -322,7 +329,7 @@ export default {
 
               if (!this.imagePreviews.find(img => img.imageName === file.name)) {
                 this.imagePreviews.push({
-                  ...this.userInfo,
+                  ...this.user,
                   imageName: file.name,
                   image: compressedImage, // Use the compressed image
                   type: file.type
@@ -349,8 +356,8 @@ export default {
 
       await Promise.all(filePromises)
 
-      console.log('filePromises', filePromises.length)
-      console.log('totalFiles', this.totalFiles)
+      // console.log('filePromises', filePromises.length)
+      // console.log('totalFiles', this.totalFiles)
       if (filePromises.length === this.totalFiles) {
         await this.sendToServer()
       }
@@ -379,9 +386,9 @@ export default {
 
   beforeUnmount() {
     // Clean up the socket connection
-    if (this.socket) {
-      this.socket.disconnect();
-    }
+    // if (this.socket) {
+    //   this.socket.disconnect();
+    // }
   }
 };
 </script>

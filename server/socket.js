@@ -1,5 +1,6 @@
 const socketIo = require('socket.io')
 const SUPERBASE = require('./supabase')
+const GAME = require('./game')
 
 // Keep track of connected users and available emojis
 const users = {}
@@ -44,9 +45,6 @@ const shuffleArray = (array) => {
   }
 }
 
-// Shuffle the available emojis initially
-shuffleArray(availableEmojis)
-
 // Function to send the list of connected users to all clients
 const updateActiveUsers = (io) => {
   const activeUsers = Object.values(users) // Get all user names
@@ -54,15 +52,23 @@ const updateActiveUsers = (io) => {
   startGameCheck(io)
 }
 
-const startGameCheck = (io) => {
+const startGameCheck = async (io) => {
+  const usersArray = Object.values(users)
   const allReady = Object.values(users).every((user) => user.state === userState.READY)
 
-  if (allReady) {
+  if (usersArray.length > 0 && allReady) {
     console.log('All users are ready! Starting the game...')
-    io.emit('allReady', 'All users are ready! Starting the game...')
+
+    const list = await SUPERBASE.getGameImages(users)
+    io.emit('allReady', list)
+    launchGame(io, list, usersArray)
   } else {
     console.log('Not all users are ready yet.')
   }
+}
+
+const launchGame = async (io, imageList, usersArray) => {
+  GAME.initGame(io, imageList, usersArray)
 }
 
 // Function to set up Socket.IO
@@ -81,13 +87,16 @@ const setupSocket = (server) => {
 
     // Check for available emojis
     if (availableEmojis.length > 0) {
+      // Shuffle the available emojis initially
+      shuffleArray(availableEmojis)
+
       // Select random emoji
       const randomIndex = Math.floor(Math.random() * availableEmojis.length)
       const emoji = availableEmojis[randomIndex]
       availableEmojis.splice(randomIndex, 1)
 
       // Initialize user
-      users[socket.id] = { name, emoji, imageCount: 0, state: userState.WAITING }
+      users[socket.id] = { id: socket.id, name, emoji, imageCount: 0, state: userState.WAITING }
       console.log(
         `User connected: ${users[socket.id].emoji} ${users[socket.id].name} (${socket.id}) images: ${users[socket.id].imageCount}`
       )
@@ -98,7 +107,7 @@ const setupSocket = (server) => {
       socket.emit('userInfo', {
         name: users[socket.id].name,
         emoji: users[socket.id].emoji,
-        id: socket.id,
+        id: users[socket.id].id,
         imageCount: users[socket.id].imageCount
       })
 
@@ -155,25 +164,18 @@ const setupSocket = (server) => {
             `User ${users[socket.id].emoji} ${users[socket.id].name} (${socket.id}) uploaded ${successfulUploads} new image(s). Total: ${users[socket.id].imageCount}`
           )
         }
+      })
 
-        // const userUploadedImgs = await SUPERBASE.getFilesStartingWith(socket.id)
-        // console.log(users[socket.id])
-        // users[socket.id].imageCount = userUploadedImgs.length
-        // console.log(
-        //   `User ${users[socket.id].emoji} ${users[socket.id].name} (${socket.id}) image(s). New total: ${users[socket.id].imageCount}`
-        // )
-        // socket.emit(
-        //   'userImgCount',
-        //   `User ${users[socket.id].emoji} ${users[socket.id].name} (${socket.id}) image(s). New total: ${users[socket.id].imageCount}`
-        // )
+      socket.on('image-response', (data) => {
+        GAME.handleResponse(data)
       })
 
       // When a client disconnects
-      socket.on('disconnect', () => {
+      socket.on('disconnect', (reason) => {
         if (users[socket.id]) {
           const disconnectedUser = users[socket.id]
           console.log(
-            `User disconnected: ${disconnectedUser.emoji} ${disconnectedUser.name} (${socket.id})`
+            `User disconnected: ${disconnectedUser.emoji} ${disconnectedUser.name} (${socket.id}) ::: ${reason}`
           )
 
           io.emit('disconnected', {
@@ -188,11 +190,6 @@ const setupSocket = (server) => {
         } else {
           console.log(`Unknown user disconnected: ${socket.id}`)
         }
-      })
-
-      // Listen for disconnect event
-      socket.on('disconnect', (reason) => {
-        console.log(`User disconnected: ${reason}`)
       })
     } else {
       console.log(`No available emojis for user: ${name}`)
