@@ -73,7 +73,7 @@
 
           </div>
 
-          <n-tag :bordered="false" round :type="user.state === 'Ready' ? 'success' : 'warning'">
+          <n-tag class="state-tag" :bordered="false" round :type="user.state === 'Ready' ? 'success' : 'warning'">
             {{ user.state }}
           </n-tag>
         </div>
@@ -94,6 +94,7 @@ import { toRaw } from 'vue';
 import { MAX_IMAGE_UPLOAD } from '@/constants';
 import socketService from '@/services/socketService';
 import userService from '@/services/userService';
+import gameService from '@/services/gameSercive';
 
 export default {
   data() {
@@ -163,8 +164,8 @@ export default {
 
         // Listen for active users update from the server
         this.socket.on('activeUsers', (data) => {
-          userService.setUserList(data.users)
-          this.activeUsers = userService.getUserList()
+          gameService.setUserList(data.users)
+          this.activeUsers = gameService.getUserList()
         });
 
         // Listen for active users update from the server
@@ -540,6 +541,11 @@ export default {
           &:last-child {
             margin-top: 0.5rem;
           }
+        }
+
+        .state-tag {
+          display: flex;
+          justify-content: center;
         }
       }
     }

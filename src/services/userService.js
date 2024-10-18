@@ -31,14 +31,6 @@ class UserService {
     this.user.imageCount = 0
   }
 
-  setUserList(userList) {
-    this.userList = userList
-  }
-
-  getUserList() {
-    return this.userList
-  }
-
   isAuthenticated() {
     return !!this.user.name // returns true if user is set
   }

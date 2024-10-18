@@ -1,5 +1,5 @@
 <template>
-    <div class="game-component">
+    <!-- <div class="game-component">
         <header>
             <h1>GAME</h1>
         </header>
@@ -11,10 +11,32 @@
         <div class="action">
             <n-button @click="sendResponse">SEND RESPONSE</n-button>
         </div>
+    </div> -->
+
+
+    <div class="page-container">
+        <h1 class="page-title">Page Title</h1>
+
+        <div class="image-container">
+            <img :src="currentImageobject?.file?.url" alt="Responsive Image" class="responsive-image" />
+        </div>
+
+        <div class="voting-btns">
+            <n-button v-for="(user, index) in userList" :key="index" @click="sendResponse(user.id)"
+                class="send-response-btn">
+                <n-ellipsis style="max-width: 10rem">
+
+                    {{ `${user.emoji} ${user.name}` }}
+                </n-ellipsis>
+            </n-button>
+
+        </div>
+
     </div>
 </template>
 
 <script>
+import gameService from '@/services/gameSercive';
 import socketService from '@/services/socketService';
 import userService from '@/services/userService';
 
@@ -23,16 +45,19 @@ export default {
         return {
             socket: null,
             user: null,
-            currentImage: null
+            userList: [],
+            currentImageobject: null
+
         };
     },
     mounted() {
         this.user = userService.getUser();
         this.socket = socketService.getSocket();
+        this.userList = gameService.getUserList()
 
         this.socket.on('game-image', (data) => {
             console.log(data);
-            this.currentImage = data.file.url
+            this.currentImageobject = data
         });
 
         // Check if socket is connected
@@ -43,9 +68,9 @@ export default {
         }
     },
     methods: {
-        sendResponse() {
+        sendResponse(vote) {
             const response = {
-                vote: 'test',
+                vote,
                 ...this.user,
             };
             this.socket.emit('image-response', response);
@@ -53,7 +78,7 @@ export default {
     },
     beforeUnmount() {
         // Optional: Disconnect when the component is destroyed (if necessary)
-        socketService.disconnect();
+        // socketService.disconnect();
     },
 };
 </script>
@@ -87,6 +112,97 @@ export default {
 
     .action {
         margin-top: 5rem;
+    }
+}
+
+.page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    min-height: 90vh;
+    overflow: hidden;
+}
+
+.page-title {
+    font-size: 24px;
+    text-align: center;
+}
+
+.image-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+img.responsive-image {
+    width: unset;
+    height: 450px;
+    object-fit: contain;
+    /* Adjust image size for smaller screens */
+
+
+    /* Maximum width on desktop */
+
+    /* Maintain aspect ratio by default */
+}
+
+.voting-btns {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+    overflow: scroll;
+    overflow-y: scroll;
+    width: 80%;
+    scrollbar-width: none;
+    max-height: 20rem;
+
+    /* Hide scrollbar in Firefox */
+    &::-webkit-scrollbar {
+        display: none;
+        /* Hide scrollbar in webkit-based browsers like Chrome, Safari */
+    }
+}
+
+.send-response-btn {
+    margin-top: 0px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+
+
+@media (min-width: 1024px) {
+    .responsive-image {
+
+        height: 300px;
+        /* Fixed height on desktop */
+        object-fit: contain;
+        /* Ensure the image fills the container */
+    }
+
+    .voting-btns {
+        max-height: 15rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .responsive-image {
+        height: 400px;
+        object-fit: contain;
+        /* Adjust image size for smaller screens */
+    }
+
+    .page-title {
+        font-size: 20px;
+    }
+
+    .voting-btns {
+        width: 110%;
+        max-height: 20rem;
     }
 }
 </style>
