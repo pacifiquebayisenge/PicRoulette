@@ -7,7 +7,7 @@ class SocketService {
 
   connect(username) {
     if (!this.socket) {
-      this.socket = io('http://localhost:3001', {
+      this.socket = io(import.meta.env.VITE_SERVER_URL, {
         query: { name: username }
       })
     }

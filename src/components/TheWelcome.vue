@@ -130,6 +130,9 @@ export default {
 
     }
   },
+  mounted() {
+    this.reconnectToSocket()
+  },
 
   methods: {
     // Connect to the socket server and pass the username
@@ -169,9 +172,9 @@ export default {
         });
 
         // Listen for active users update from the server
-        this.socket.on('newImage', (data) => {
+        this.socket.on('newImage', () => {
           // TODO: notif when upload went succesfull
-          console.log(data)
+          // console.log(data)
         });
 
         // Listen for active users update from the server
@@ -182,8 +185,8 @@ export default {
         });
 
         // Listen for disconnect event
-        this.socket.on('allReady', (data) => {
-          console.log(data)
+        this.socket.on('allReady', () => {
+          // console.log(data)
           this.$router.push('/game')
 
         });
@@ -194,6 +197,17 @@ export default {
           console.log('Disconnected from server');
         });
       }
+    },
+
+    reconnectToSocket() {
+      if (!userService.getUser().name) return
+      this.user = userService.getUser()
+
+      this.socket = socketService.getSocket()
+      this.totalFiles = 0
+      this.imagePreviews = []
+      this.successUpload = 0
+
     },
 
     // Send a comment to the server

@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import GameView from '@/views/GameView.vue'
 import userService from '@/services/userService'
+import ScoreView from '@/views/ScoreView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -15,6 +16,11 @@ const router = createRouter({
       path: '/game',
       name: 'game',
       component: GameView
+    },
+    {
+      path: '/score',
+      name: 'score',
+      component: ScoreView
     },
     {
       path: '/about',
@@ -36,7 +42,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const isAuthenticated = userService.isAuthenticated()
 
-  if (to.name === 'game' && !isAuthenticated) {
+  if ((to.name === 'game' && !isAuthenticated) || (to.name === 'score' && !isAuthenticated)) {
     // Redirect to home if trying to access /game without a valid user
     next({ name: 'home' })
   } else {

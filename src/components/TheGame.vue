@@ -1,31 +1,16 @@
 <template>
-    <!-- <div class="game-component">
-        <header>
-            <h1>GAME</h1>
-        </header>
-        <div class="container">
-            <div class="image-container">
-                <n-image :src="currentImage" alt="Game Image" />
-            </div>
-        </div>
-        <div class="action">
-            <n-button @click="sendResponse">SEND RESPONSE</n-button>
-        </div>
-    </div> -->
-
-
-    <div class="page-container">
-        <h1 class="page-title">Page Title</h1>
+    <div class="game-container">
+        <h1 class="page-title">Game</h1>
 
         <div class="image-container">
             <img :src="currentImageobject?.file?.url" alt="Responsive Image" class="responsive-image" />
         </div>
 
         <div class="voting-btns">
-            <n-button v-for="(user, index) in userList" :key="index" @click="sendResponse(user.id)"
-                class="send-response-btn">
+            <n-button v-for="(user, index) in userList" :key="index" secondary :ref="user.id" :id="user.id"
+                :type="idReveal ? user?.id === currentImageobject?.id ? 'success' : 'error' : 'default'"
+                @click="sendResponse(user.id)" class="send-response-btn">
                 <n-ellipsis style="max-width: 10rem">
-
                     {{ `${user.emoji} ${user.name}` }}
                 </n-ellipsis>
             </n-button>
@@ -40,13 +25,16 @@ import gameService from '@/services/gameSercive';
 import socketService from '@/services/socketService';
 import userService from '@/services/userService';
 
+
 export default {
     data() {
         return {
             socket: null,
             user: null,
             userList: [],
-            currentImageobject: null
+            currentImageobject: null,
+            idReveal: false,
+            score: 0
 
         };
     },
@@ -56,8 +44,13 @@ export default {
         this.userList = gameService.getUserList()
 
         this.socket.on('game-image', (data) => {
-            console.log(data);
+            this.idReveal = false
             this.currentImageobject = data
+        });
+
+        this.socket.on('game-end', () => {
+            this.socket.emit('score', { ...this.user, score: this.score })
+            this.$router.push('/score')
         });
 
         // Check if socket is connected
@@ -69,11 +62,26 @@ export default {
     },
     methods: {
         sendResponse(vote) {
-            const response = {
-                vote,
-                ...this.user,
-            };
-            this.socket.emit('image-response', response);
+            if (this.idReveal) return
+            this.idReveal = true
+
+            const rightBtn = this.$refs[this.currentImageobject.id];
+
+            if (rightBtn && rightBtn.$el) {
+                rightBtn.$el.scrollIntoView(false);
+            }
+
+            vote === this.currentImageobject.id ? this.score += 10 : null
+
+            setTimeout(() => {
+
+                const response = {
+                    vote,
+                    ...this.user,
+                };
+                this.socket.emit('image-response', response);
+            }, 3000);
+
         },
     },
     beforeUnmount() {
@@ -84,99 +92,72 @@ export default {
 </script>
 
 <style lang="scss">
-.game-component {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    padding: 2.5rem 1rem;
-
-    header {
-        padding: 3rem 0;
-    }
-
-    .container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin: 1rem;
-        gap: 2rem;
-        width: 80%;
-
-        img {
-            width: 100%;
-            max-width: 40rem;
-            height: auto;
-        }
-    }
-
-    .action {
-        margin-top: 5rem;
-    }
-}
-
-.page-container {
+.game-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
     padding: 20px;
     min-height: 90vh;
     overflow: hidden;
-}
 
-.page-title {
-    font-size: 24px;
-    text-align: center;
-}
+    .page-title {
+        font-size: 24px;
+        text-align: center;
+    }
 
-.image-container {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-}
+    .image-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin: 2.5rem 0;
 
-img.responsive-image {
-    width: unset;
-    height: 450px;
-    object-fit: contain;
-    /* Adjust image size for smaller screens */
+        img.responsive-image {
+            width: inherit;
+            height: 450px;
+            object-fit: contain;
+        }
+    }
 
 
-    /* Maximum width on desktop */
 
-    /* Maintain aspect ratio by default */
-}
+    .voting-btns {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1.5rem;
+        overflow: scroll;
+        overflow-y: scroll;
+        width: 80%;
+        scrollbar-width: none;
+        max-height: 20rem;
 
-.voting-btns {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1.5rem;
-    overflow: scroll;
-    overflow-y: scroll;
-    width: 80%;
-    scrollbar-width: none;
-    max-height: 20rem;
+        /* Hide scrollbar in Firefox */
+        &::-webkit-scrollbar {
+            display: none;
+            /* Hide scrollbar in webkit-based browsers like Chrome, Safari */
+        }
 
-    /* Hide scrollbar in Firefox */
-    &::-webkit-scrollbar {
-        display: none;
-        /* Hide scrollbar in webkit-based browsers like Chrome, Safari */
+        .send-response-btn {
+
+            border: solid #b9baba 0.125rem;
+
+            span span span {
+
+
+                font-weight: bold;
+            }
+        }
     }
 }
 
-.send-response-btn {
-    margin-top: 0px;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-}
+
+
+
 
 
 
 @media (min-width: 1024px) {
-    .responsive-image {
+    img.responsive-image {
 
         height: 300px;
         /* Fixed height on desktop */
@@ -190,9 +171,10 @@ img.responsive-image {
 }
 
 @media (max-width: 768px) {
-    .responsive-image {
+    img.responsive-image {
         height: 400px;
         object-fit: contain;
+        width: inherit;
         /* Adjust image size for smaller screens */
     }
 
