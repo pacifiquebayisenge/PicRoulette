@@ -16,7 +16,7 @@ class SocketService {
 
   getSocket() {
     if (!this.socket) {
-      throw new Error('Socket not initialized. Call connect() first.')
+      throw new Error('Socket not initialized. Call connect() first. ')
     }
     return this.socket
   }
