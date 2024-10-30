@@ -11,6 +11,7 @@ class SocketService {
         query: { name: username }
       })
     }
+
     return this.socket
   }
 

@@ -45,6 +45,7 @@ export default {
 
         this.socket.on('game-image', (data) => {
             this.idReveal = false
+            console.log(data)
             this.currentImageobject = data
         });
 
@@ -80,7 +81,7 @@ export default {
                     ...this.user,
                 };
                 this.socket.emit('image-response', response);
-            }, 3000);
+            }, 1000);
 
         },
     },

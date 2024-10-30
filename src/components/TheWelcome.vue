@@ -280,106 +280,118 @@ export default {
       );
 
       // Get the total number of files
-      this.totalFiles = noDupliList.slice(0, MAX_IMAGE_UPLOAD).length
-
-      const files = noDupliList.slice(0, MAX_IMAGE_UPLOAD)
+      this.totalFiles = noDupliList.slice(0, MAX_IMAGE_UPLOAD).length;
+      const files = noDupliList.slice(0, MAX_IMAGE_UPLOAD);
 
       // Array to hold promises for file reading
       const filePromises = [];
 
-      files.forEach(file => {
+      for (const file of files) {
         if (!file.file.type.startsWith('image/')) {
           console.error("File is not an image:", file.name);
-          return;
+          continue; // Use continue instead of return to process other files
         }
 
         const reader = new FileReader();
         const filePromise = new Promise((resolve, reject) => {
-          reader.onprogress = (e) => {
-            if (e.lengthComputable) {
-              const fileProgress = (e.loaded / e.total) * 100;
-              this.updateOverallProgress(fileProgress, this.totalFiles); // Update overall progress
-            }
-          };
-
           reader.onload = (e) => {
-
             // Create an image element
             const img = new Image();
             img.src = e.target.result;
 
             img.onload = async () => {
-              // Create a canvas to compress the image
-              const canvas = document.createElement('canvas');
-              const ctx = canvas.getContext('2d');
+              try {
+                // Compress and convert the image to webp blob
+                const compressedImage = await this.compressAndConvertToWebP(img);
 
-              // Set canvas dimensions
-              const MAX_WIDTH = 800; // Adjust this value as needed
-              const MAX_HEIGHT = 800; // Adjust this value as needed
-              let width = img.width;
-              let height = img.height;
-
-              // Calculate the new dimensions while maintaining the aspect ratio
-              if (width > height) {
-                if (width > MAX_WIDTH) {
-                  height *= MAX_WIDTH / width;
-                  width = MAX_WIDTH;
+                if (!this.imagePreviews.find(img => img.imageName === file.name.replace(/\.\w+$/, '.webp'))) {
+                  this.imagePreviews.push({
+                    ...this.user,
+                    imageName: file.name.replace(/\.\w+$/, '.webp'),
+                    image: compressedImage, // Use the compressed image
+                    type: compressedImage.type,
+                  });
                 }
-              } else {
-                if (height > MAX_HEIGHT) {
-                  width *= MAX_HEIGHT / height;
-                  height = MAX_HEIGHT;
-                }
+                resolve(); // Resolve the promise once the file is processed
+              } catch (error) {
+                reject(error); // Reject the promise if an error occurs during compression
               }
-
-              // Resize the canvas
-              canvas.width = width;
-              canvas.height = height;
-
-              // Draw the image on the canvas
-              ctx.drawImage(img, 0, 0, width, height);
-
-              // Compress and convert the image to base64
-              const compressedImage = canvas.toDataURL(file.file.type, 0.7); // 0.7 is the quality (0 to 1)
-
-              if (!this.imagePreviews.find(img => img.imageName === file.name)) {
-                this.imagePreviews.push({
-                  ...this.user,
-                  imageName: file.name,
-                  image: compressedImage, // Use the compressed image
-                  type: file.type
-                });
-              }
-              resolve(); // Resolve the promise once the file is processed
             };
 
             img.onerror = (error) => {
-              reject(error); // Reject the promise in case of error
+              reject(new Error(`Failed to load image: ${error.message}`)); // Provide more detailed error info
             };
           };
 
           reader.onerror = (error) => {
-            reject(error); // Reject the promise in case of error
+            reject(new Error(`Failed to read file: ${error.message}`)); // Provide more detailed error info
           };
 
           reader.readAsDataURL(file.file);
         });
 
         filePromises.push(filePromise);
-      });
+      }
 
+      await Promise.all(filePromises);
 
-      await Promise.all(filePromises)
-
-      // console.log('filePromises', filePromises.length)
-      // console.log('totalFiles', this.totalFiles)
+      // Console log statements
       if (filePromises.length === this.totalFiles) {
-        await this.sendToServer()
+        this.sendToServer()
       }
     },
 
+
+    compressAndConvertToWebP(img) {
+      return new Promise((resolve, reject) => {
+        // Create a canvas to compress the image
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas dimensions
+        const MAX_WIDTH = 800; // Adjust this value as needed
+        const MAX_HEIGHT = 800; // Adjust this value as needed
+        let width = img.width;
+        let height = img.height;
+
+        // Calculate the new dimensions while maintaining the aspect ratio
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width *= MAX_HEIGHT / height;
+            height = MAX_HEIGHT;
+          }
+        }
+
+        // Resize the canvas
+        canvas.width = width;
+        canvas.height = height;
+
+        // Draw the image on the canvas
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Convert the canvas to WebP format and resolve with Blob
+        canvas.toBlob((blob) => {
+          if (!blob) {
+            reject(new Error('Failed to create blob from canvas.'));
+            return;
+          }
+
+          // Resolve the promise with the Blob
+          resolve(blob);
+        }, 'image/webp', 0.7); // Convert to WebP
+      });
+    },
+
+
+
     async sendToServer() {
 
+      console.log(toRaw(this.imagePreviews))
       // If the requirement is met, emit the images to the socket server
       await this.socket.emit('imageUploaded', toRaw(this.imagePreviews));
 
