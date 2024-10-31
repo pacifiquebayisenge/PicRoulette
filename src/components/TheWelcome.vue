@@ -1,87 +1,91 @@
 <template>
-  <div class="home-component">
-    <header>
-      <h1>TEST</h1>
-    </header>
-
-    <!-- Ask for the user's name if not yet set -->
-    <div v-if="!user" class="container">
-      <n-input v-model:value="name" type="text" size="large" :maxlength="15"
-        :placeholder="getPlaceholder || 'Enter your name'" />
-      <n-button @click="connectToSocket">Connect</n-button>
-    </div>
-
-    <!-- Show the comment input if connected -->
-    <div v-if="user" class="container">
-      <n-input v-model:value="comment" type="textarea" placeholder="Enter your comment" :maxlength="150" :autosize="{
-        minRows: 2,
-        maxRows: 3
-      }" />
-      <n-button @click="sendComment">Send Comment</n-button>
-
-      <!-- Display comments -->
-      <div class="chat-container" ref="chatContainer">
-        <div v-for="(comment, index) in comments" :key="index" class="chat-body">
-
-          <div>
-            <n-ellipsis style="max-width: 12rem">
-              {{ comment.emoji }} {{ comment.name }}
-            </n-ellipsis>
-          </div>
+  <n-card>
 
 
-          <div>
-            <n-gradient-text :type="comment.id === user.id ? 'success' : 'info'">
-              {{ comment.message }}
-            </n-gradient-text>
+    <div class="home-component">
+      <header>
+        <h1>Pic Roulette</h1>
+      </header>
+
+      <!-- Ask for the user's name if not yet set -->
+      <div v-if="!user" class="container">
+        <n-input v-model:value="name" type="text" size="large" :maxlength="15"
+          :placeholder="getPlaceholder || 'Enter your name'" />
+        <n-button @click="connectToSocket">Connect</n-button>
+      </div>
+
+      <!-- Show the comment input if connected -->
+      <div v-if="user" class="container">
+        <n-input v-model:value="comment" type="textarea" placeholder="Enter your comment" :maxlength="150" :autosize="{
+          minRows: 2,
+          maxRows: 3
+        }" />
+        <n-button @click="sendComment">Send Comment</n-button>
+
+        <!-- Display comments -->
+        <div class="chat-container" ref="chatContainer">
+          <div v-for="(comment, index) in comments" :key="index" class="chat-body">
+
+            <div>
+              <n-ellipsis style="max-width: 12rem">
+                {{ comment.emoji }} {{ comment.name }}
+              </n-ellipsis>
+            </div>
+
+
+            <div>
+              <n-gradient-text :type="comment.id === user.id ? 'success' : 'info'">
+                {{ comment.message }}
+              </n-gradient-text>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div v-if="user" class="images-container">
-      <h2>Upload images</h2>
+      <div v-if="user" class="images-container">
+        <h2>Upload images</h2>
 
-      <n-upload :disabled="successUpload >= 15" :min="5" :multiple="true" :show-file-list="false"
-        @change="handleImageUpload" accept="image/*">
-        <n-button>Upload File</n-button>
-      </n-upload>
+        <n-upload :disabled="successUpload >= 15" :min="5" :multiple="true" :show-file-list="false"
+          @change="handleImageUpload" accept="image/*">
+          <n-button>Upload File</n-button>
+        </n-upload>
 
-    </div>
-
-
-
-    <div v-if="user" class="progress-container">
-      <n-progress v-if="uploadProgress" type="line" color="#36ad6a" :percentage="uploadProgress"
-        indicator-placement="inside" processing />
-      Images Uploaded {{ successUpload }}
-    </div>
-
-    <!-- Display active users count and names -->
-    <div v-if="activeUsers.length" class="active-users-container">
-      <h2>Active Users ({{ activeUsers.length }}):</h2>
-
-      <div>
-        <div v-for="(user, index) in activeUsers" :key="index" class="user-component">
-
-          <div>{{ user.emoji }}</div>
-
-          <div>
-            <n-ellipsis style="max-width: 12rem">
-              {{ user.name }}
-            </n-ellipsis>
-
-          </div>
-
-          <n-tag class="state-tag" :bordered="false" round :type="user.state === 'Ready' ? 'success' : 'warning'">
-            {{ user.state }}
-          </n-tag>
-        </div>
       </div>
 
 
+
+      <div v-if="user" class="progress-container">
+        <n-progress v-if="uploadProgress" type="line" color="#36ad6a" :percentage="uploadProgress"
+          indicator-placement="inside" processing />
+        Images Uploaded {{ successUpload }}
+      </div>
+
+      <!-- Display active users count and names -->
+      <div v-if="activeUsers.length" class="active-users-container">
+        <h2>Active Users ({{ activeUsers.length }}):</h2>
+
+        <div>
+          <div v-for="(user, index) in activeUsers" :key="index" class="user-component">
+
+            <div>{{ user.emoji }}</div>
+
+            <div>
+              <n-ellipsis style="max-width: 12rem">
+                {{ user.name }}
+              </n-ellipsis>
+
+            </div>
+
+            <n-tag class="state-tag" :bordered="false" round :type="user.state === 'Ready' ? 'success' : 'warning'">
+              {{ user.state }}
+            </n-tag>
+          </div>
+        </div>
+
+
+      </div>
     </div>
-  </div>
+  </n-card>
 </template>
 
 <script>
@@ -110,7 +114,8 @@ export default {
       totalFiles: 0, // total images user want to upload 
       imagePreviews: [], // Stores the base64 image previews
       uploadProgress: 0,
-      successUpload: 0, // total images successfully uploaded
+      successUpload: 0, // total images successfully uploaded,
+      reconnect: false
     };
   },
   setup() {
@@ -131,15 +136,21 @@ export default {
     }
   },
   mounted() {
-    this.reconnectToSocket()
+    if (userService.getUser().name) {
+      this.reconnectToSocket()
+    }
   },
 
   methods: {
     // Connect to the socket server and pass the username
     connectToSocket() {
       if (this.name) {
-        this.isLoading = true
-        this.socket = socketService.connect(this.name)
+        if (!this.reconnect) {
+          this.isLoading = true
+          this.socket = socketService.connect(this.name)
+        }
+        this.reconnect = false
+
 
         // Listen for user info from the server
         this.socket.on('userInfo', (data) => {
@@ -175,6 +186,8 @@ export default {
         this.socket.on('newImage', () => {
           // TODO: notif when upload went succesfull
           // console.log(data)
+          this.successUpload += 1
+          this.updateOverallProgress()
         });
 
         // Listen for active users update from the server
@@ -200,13 +213,18 @@ export default {
     },
 
     reconnectToSocket() {
+      this.reconnect = true
       if (!userService.getUser().name) return
       this.user = userService.getUser()
+      this.name = this.user.name
 
       this.socket = socketService.getSocket()
+
       this.totalFiles = 0
       this.imagePreviews = []
       this.successUpload = 0
+      this.connectToSocket()
+      this.socket.emit('game-end')
 
     },
 
@@ -280,8 +298,8 @@ export default {
       );
 
       // Get the total number of files
-      this.totalFiles = noDupliList.slice(0, MAX_IMAGE_UPLOAD).length;
       const files = noDupliList.slice(0, MAX_IMAGE_UPLOAD);
+      this.totalFiles = files.length;
 
       // Array to hold promises for file reading
       const filePromises = [];
@@ -390,23 +408,18 @@ export default {
 
 
     async sendToServer() {
-
-      console.log(toRaw(this.imagePreviews))
       // If the requirement is met, emit the images to the socket server
       await this.socket.emit('imageUploaded', toRaw(this.imagePreviews));
-
-
     },
 
-    updateOverallProgress(fileProgress, totalFiles) {
-      // Accumulate the overall progress based on the progress of each file
-      this.uploadProgress += (fileProgress / totalFiles);
+    updateOverallProgress() {
+
+      this.uploadProgress = Math.trunc((this.successUpload / this.totalFiles) * 100);
 
       // Cap the progress at 100% once all uploads are done
       if (this.uploadProgress >= 100) {
         this.uploadProgress = 100;
       }
-      // console.log(`Overall Progress: ${this.uploadProgress}%`);
     }
 
   },
@@ -439,6 +452,25 @@ export default {
   transition: width 0.3s ease;
 }
 
+.n-card {
+
+  filter: drop-shadow(5px 6px 11px #515151)
+}
+
+h1 {
+
+  background: rgb(103, 168, 244);
+  background: -moz-linear-gradient(270deg, rgba(103, 168, 244, 1) 0%, rgba(66, 211, 146, 1) 78%);
+  background: -webkit-linear-gradient(270deg, rgba(103, 168, 244, 1) 0%, rgba(66, 211, 146, 1) 78%);
+  background: linear-gradient(270deg, rgba(103, 168, 244, 1) 0%, rgba(66, 211, 146, 1) 78%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#67a8f4", endColorstr="#42d392", GradientType=1);
+
+  /* Text-specific properties */
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* Hides the actual color and shows only the gradient */
+}
 
 .home-component {
   display: flex;
@@ -453,12 +485,18 @@ export default {
     margin: 1rem;
     gap: 2rem;
     width: 80%;
+
+
+  }
+
+  button span {
+    font-weight: bolder;
   }
 
   .chat-container {
     width: 100%;
     padding: 1rem;
-    max-height: 30rem;
+    max-height: 15rem;
     overflow-y: scroll;
 
     &::-webkit-scrollbar {
