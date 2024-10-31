@@ -1,87 +1,91 @@
 <template>
-  <div class="home-component">
-    <header>
-      <h1>TEST</h1>
-    </header>
-
-    <!-- Ask for the user's name if not yet set -->
-    <div v-if="!user" class="container">
-      <n-input v-model:value="name" type="text" size="large" :maxlength="15"
-        :placeholder="getPlaceholder || 'Enter your name'" />
-      <n-button @click="connectToSocket">Connect</n-button>
-    </div>
-
-    <!-- Show the comment input if connected -->
-    <div v-if="user" class="container">
-      <n-input v-model:value="comment" type="textarea" placeholder="Enter your comment" :maxlength="150" :autosize="{
-        minRows: 2,
-        maxRows: 3
-      }" />
-      <n-button @click="sendComment">Send Comment</n-button>
-
-      <!-- Display comments -->
-      <div class="chat-container" ref="chatContainer">
-        <div v-for="(comment, index) in comments" :key="index" class="chat-body">
-
-          <div>
-            <n-ellipsis style="max-width: 12rem">
-              {{ comment.emoji }} {{ comment.name }}
-            </n-ellipsis>
-          </div>
+  <n-card>
 
 
-          <div>
-            <n-gradient-text :type="comment.id === user.id ? 'success' : 'info'">
-              {{ comment.message }}
-            </n-gradient-text>
+    <div class="home-component">
+      <header>
+        <h1>Pic Roulette</h1>
+      </header>
+
+      <!-- Ask for the user's name if not yet set -->
+      <div v-if="!user" class="container">
+        <n-input v-model:value="name" type="text" size="large" :maxlength="15"
+          :placeholder="getPlaceholder || 'Enter your name'" />
+        <n-button @click="connectToSocket">Connect</n-button>
+      </div>
+
+      <!-- Show the comment input if connected -->
+      <div v-if="user" class="container">
+        <n-input v-model:value="comment" type="textarea" placeholder="Enter your comment" :maxlength="150" :autosize="{
+          minRows: 2,
+          maxRows: 3
+        }" />
+        <n-button @click="sendComment">Send Comment</n-button>
+
+        <!-- Display comments -->
+        <div class="chat-container" ref="chatContainer">
+          <div v-for="(comment, index) in comments" :key="index" class="chat-body">
+
+            <div>
+              <n-ellipsis style="max-width: 12rem">
+                {{ comment.emoji }} {{ comment.name }}
+              </n-ellipsis>
+            </div>
+
+
+            <div>
+              <n-gradient-text :type="comment.id === user.id ? 'success' : 'info'">
+                {{ comment.message }}
+              </n-gradient-text>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div v-if="user" class="images-container">
-      <h2>Upload images</h2>
+      <div v-if="user" class="images-container">
+        <h2>Upload images</h2>
 
-      <n-upload :disabled="successUpload >= 15" :min="5" :multiple="true" :show-file-list="false"
-        @change="handleImageUpload" accept="image/*">
-        <n-button>Upload File</n-button>
-      </n-upload>
+        <n-upload :disabled="successUpload >= 15" :min="5" :multiple="true" :show-file-list="false"
+          @change="handleImageUpload" accept="image/*">
+          <n-button>Upload File</n-button>
+        </n-upload>
 
-    </div>
-
-
-
-    <div v-if="user" class="progress-container">
-      <n-progress v-if="uploadProgress" type="line" color="#36ad6a" :percentage="uploadProgress"
-        indicator-placement="inside" processing />
-      Images Uploaded {{ successUpload }}
-    </div>
-
-    <!-- Display active users count and names -->
-    <div v-if="activeUsers.length" class="active-users-container">
-      <h2>Active Users ({{ activeUsers.length }}):</h2>
-
-      <div>
-        <div v-for="(user, index) in activeUsers" :key="index" class="user-component">
-
-          <div>{{ user.emoji }}</div>
-
-          <div>
-            <n-ellipsis style="max-width: 12rem">
-              {{ user.name }}
-            </n-ellipsis>
-
-          </div>
-
-          <n-tag class="state-tag" :bordered="false" round :type="user.state === 'Ready' ? 'success' : 'warning'">
-            {{ user.state }}
-          </n-tag>
-        </div>
       </div>
 
 
+
+      <div v-if="user" class="progress-container">
+        <n-progress v-if="uploadProgress" type="line" color="#36ad6a" :percentage="uploadProgress"
+          indicator-placement="inside" processing />
+        Images Uploaded {{ successUpload }}
+      </div>
+
+      <!-- Display active users count and names -->
+      <div v-if="activeUsers.length" class="active-users-container">
+        <h2>Active Users ({{ activeUsers.length }}):</h2>
+
+        <div>
+          <div v-for="(user, index) in activeUsers" :key="index" class="user-component">
+
+            <div>{{ user.emoji }}</div>
+
+            <div>
+              <n-ellipsis style="max-width: 12rem">
+                {{ user.name }}
+              </n-ellipsis>
+
+            </div>
+
+            <n-tag class="state-tag" :bordered="false" round :type="user.state === 'Ready' ? 'success' : 'warning'">
+              {{ user.state }}
+            </n-tag>
+          </div>
+        </div>
+
+
+      </div>
     </div>
-  </div>
+  </n-card>
 </template>
 
 <script>
@@ -110,7 +114,8 @@ export default {
       totalFiles: 0, // total images user want to upload 
       imagePreviews: [], // Stores the base64 image previews
       uploadProgress: 0,
-      successUpload: 0, // total images successfully uploaded
+      successUpload: 0, // total images successfully uploaded,
+      reconnect: false
     };
   },
   setup() {
@@ -131,15 +136,21 @@ export default {
     }
   },
   mounted() {
-    this.reconnectToSocket()
+    if (userService.getUser().name) {
+      this.reconnectToSocket()
+    }
   },
 
   methods: {
     // Connect to the socket server and pass the username
     connectToSocket() {
       if (this.name) {
-        this.isLoading = true
-        this.socket = socketService.connect(this.name)
+        if (!this.reconnect) {
+          this.isLoading = true
+          this.socket = socketService.connect(this.name)
+        }
+        this.reconnect = false
+
 
         // Listen for user info from the server
         this.socket.on('userInfo', (data) => {
@@ -175,6 +186,8 @@ export default {
         this.socket.on('newImage', () => {
           // TODO: notif when upload went succesfull
           // console.log(data)
+          this.successUpload += 1
+          this.updateOverallProgress()
         });
 
         // Listen for active users update from the server
@@ -200,13 +213,18 @@ export default {
     },
 
     reconnectToSocket() {
+      this.reconnect = true
       if (!userService.getUser().name) return
       this.user = userService.getUser()
+      this.name = this.user.name
 
       this.socket = socketService.getSocket()
+
       this.totalFiles = 0
       this.imagePreviews = []
       this.successUpload = 0
+      this.connectToSocket()
+      this.socket.emit('game-end')
 
     },
 
@@ -280,121 +298,128 @@ export default {
       );
 
       // Get the total number of files
-      this.totalFiles = noDupliList.slice(0, MAX_IMAGE_UPLOAD).length
-
-      const files = noDupliList.slice(0, MAX_IMAGE_UPLOAD)
+      const files = noDupliList.slice(0, MAX_IMAGE_UPLOAD);
+      this.totalFiles = files.length;
 
       // Array to hold promises for file reading
       const filePromises = [];
 
-      files.forEach(file => {
+      for (const file of files) {
         if (!file.file.type.startsWith('image/')) {
           console.error("File is not an image:", file.name);
-          return;
+          continue; // Use continue instead of return to process other files
         }
 
         const reader = new FileReader();
         const filePromise = new Promise((resolve, reject) => {
-          reader.onprogress = (e) => {
-            if (e.lengthComputable) {
-              const fileProgress = (e.loaded / e.total) * 100;
-              this.updateOverallProgress(fileProgress, this.totalFiles); // Update overall progress
-            }
-          };
-
           reader.onload = (e) => {
-
             // Create an image element
             const img = new Image();
             img.src = e.target.result;
 
             img.onload = async () => {
-              // Create a canvas to compress the image
-              const canvas = document.createElement('canvas');
-              const ctx = canvas.getContext('2d');
+              try {
+                // Compress and convert the image to webp blob
+                const compressedImage = await this.compressAndConvertToWebP(img);
 
-              // Set canvas dimensions
-              const MAX_WIDTH = 800; // Adjust this value as needed
-              const MAX_HEIGHT = 800; // Adjust this value as needed
-              let width = img.width;
-              let height = img.height;
-
-              // Calculate the new dimensions while maintaining the aspect ratio
-              if (width > height) {
-                if (width > MAX_WIDTH) {
-                  height *= MAX_WIDTH / width;
-                  width = MAX_WIDTH;
+                if (!this.imagePreviews.find(img => img.imageName === file.name.replace(/\.\w+$/, '.webp'))) {
+                  this.imagePreviews.push({
+                    ...this.user,
+                    imageName: file.name.replace(/\.\w+$/, '.webp'),
+                    image: compressedImage, // Use the compressed image
+                    type: compressedImage.type,
+                  });
                 }
-              } else {
-                if (height > MAX_HEIGHT) {
-                  width *= MAX_HEIGHT / height;
-                  height = MAX_HEIGHT;
-                }
+                resolve(); // Resolve the promise once the file is processed
+              } catch (error) {
+                reject(error); // Reject the promise if an error occurs during compression
               }
-
-              // Resize the canvas
-              canvas.width = width;
-              canvas.height = height;
-
-              // Draw the image on the canvas
-              ctx.drawImage(img, 0, 0, width, height);
-
-              // Compress and convert the image to base64
-              const compressedImage = canvas.toDataURL(file.file.type, 0.7); // 0.7 is the quality (0 to 1)
-
-              if (!this.imagePreviews.find(img => img.imageName === file.name)) {
-                this.imagePreviews.push({
-                  ...this.user,
-                  imageName: file.name,
-                  image: compressedImage, // Use the compressed image
-                  type: file.type
-                });
-              }
-              resolve(); // Resolve the promise once the file is processed
             };
 
             img.onerror = (error) => {
-              reject(error); // Reject the promise in case of error
+              reject(new Error(`Failed to load image: ${error.message}`)); // Provide more detailed error info
             };
           };
 
           reader.onerror = (error) => {
-            reject(error); // Reject the promise in case of error
+            reject(new Error(`Failed to read file: ${error.message}`)); // Provide more detailed error info
           };
 
           reader.readAsDataURL(file.file);
         });
 
         filePromises.push(filePromise);
-      });
+      }
 
+      await Promise.all(filePromises);
 
-      await Promise.all(filePromises)
-
-      // console.log('filePromises', filePromises.length)
-      // console.log('totalFiles', this.totalFiles)
+      // Console log statements
       if (filePromises.length === this.totalFiles) {
-        await this.sendToServer()
+        this.sendToServer()
       }
     },
 
-    async sendToServer() {
 
-      // If the requirement is met, emit the images to the socket server
-      await this.socket.emit('imageUploaded', toRaw(this.imagePreviews));
+    compressAndConvertToWebP(img) {
+      return new Promise((resolve, reject) => {
+        // Create a canvas to compress the image
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
 
+        // Set canvas dimensions
+        const MAX_WIDTH = 800; // Adjust this value as needed
+        const MAX_HEIGHT = 800; // Adjust this value as needed
+        let width = img.width;
+        let height = img.height;
 
+        // Calculate the new dimensions while maintaining the aspect ratio
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width *= MAX_HEIGHT / height;
+            height = MAX_HEIGHT;
+          }
+        }
+
+        // Resize the canvas
+        canvas.width = width;
+        canvas.height = height;
+
+        // Draw the image on the canvas
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Convert the canvas to WebP format and resolve with Blob
+        canvas.toBlob((blob) => {
+          if (!blob) {
+            reject(new Error('Failed to create blob from canvas.'));
+            return;
+          }
+
+          // Resolve the promise with the Blob
+          resolve(blob);
+        }, 'image/webp', 0.7); // Convert to WebP
+      });
     },
 
-    updateOverallProgress(fileProgress, totalFiles) {
-      // Accumulate the overall progress based on the progress of each file
-      this.uploadProgress += (fileProgress / totalFiles);
+
+
+    async sendToServer() {
+      // If the requirement is met, emit the images to the socket server
+      await this.socket.emit('imageUploaded', toRaw(this.imagePreviews));
+    },
+
+    updateOverallProgress() {
+
+      this.uploadProgress = Math.trunc((this.successUpload / this.totalFiles) * 100);
 
       // Cap the progress at 100% once all uploads are done
       if (this.uploadProgress >= 100) {
         this.uploadProgress = 100;
       }
-      // console.log(`Overall Progress: ${this.uploadProgress}%`);
     }
 
   },
@@ -427,6 +452,25 @@ export default {
   transition: width 0.3s ease;
 }
 
+.n-card {
+
+  filter: drop-shadow(5px 6px 11px #515151)
+}
+
+h1 {
+
+  background: rgb(103, 168, 244);
+  background: -moz-linear-gradient(270deg, rgba(103, 168, 244, 1) 0%, rgba(66, 211, 146, 1) 78%);
+  background: -webkit-linear-gradient(270deg, rgba(103, 168, 244, 1) 0%, rgba(66, 211, 146, 1) 78%);
+  background: linear-gradient(270deg, rgba(103, 168, 244, 1) 0%, rgba(66, 211, 146, 1) 78%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#67a8f4", endColorstr="#42d392", GradientType=1);
+
+  /* Text-specific properties */
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* Hides the actual color and shows only the gradient */
+}
 
 .home-component {
   display: flex;
@@ -441,12 +485,18 @@ export default {
     margin: 1rem;
     gap: 2rem;
     width: 80%;
+
+
+  }
+
+  button span {
+    font-weight: bolder;
   }
 
   .chat-container {
     width: 100%;
     padding: 1rem;
-    max-height: 30rem;
+    max-height: 15rem;
     overflow-y: scroll;
 
     &::-webkit-scrollbar {

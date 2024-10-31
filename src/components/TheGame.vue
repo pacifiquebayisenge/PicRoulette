@@ -1,23 +1,25 @@
 <template>
-    <div class="game-container">
-        <h1 class="page-title">Game</h1>
+    <n-card>
+        <div class="game-container">
+            <h1 class="page-title">Game</h1>
 
-        <div class="image-container">
-            <img :src="currentImageobject?.file?.url" alt="Responsive Image" class="responsive-image" />
+            <div class="image-container">
+                <img :src="currentImageobject?.file?.url" alt="Responsive Image" class="responsive-image" />
+            </div>
+
+            <div class="voting-btns">
+                <n-button v-for="(user, index) in userList" :key="index" secondary :ref="user.id" :id="user.id"
+                    :type="idReveal ? user?.id === currentImageobject?.id ? 'success' : 'error' : 'default'"
+                    @click="sendResponse(user.id)" class="send-response-btn">
+                    <n-ellipsis style="max-width: 10rem">
+                        {{ `${user.emoji} ${user.name}` }}
+                    </n-ellipsis>
+                </n-button>
+
+            </div>
+
         </div>
-
-        <div class="voting-btns">
-            <n-button v-for="(user, index) in userList" :key="index" secondary :ref="user.id" :id="user.id"
-                :type="idReveal ? user?.id === currentImageobject?.id ? 'success' : 'error' : 'default'"
-                @click="sendResponse(user.id)" class="send-response-btn">
-                <n-ellipsis style="max-width: 10rem">
-                    {{ `${user.emoji} ${user.name}` }}
-                </n-ellipsis>
-            </n-button>
-
-        </div>
-
-    </div>
+    </n-card>
 </template>
 
 <script>
@@ -45,6 +47,7 @@ export default {
 
         this.socket.on('game-image', (data) => {
             this.idReveal = false
+            console.log(data)
             this.currentImageobject = data
         });
 
@@ -80,7 +83,7 @@ export default {
                     ...this.user,
                 };
                 this.socket.emit('image-response', response);
-            }, 3000);
+            }, 1000);
 
         },
     },

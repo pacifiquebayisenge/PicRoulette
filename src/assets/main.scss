@@ -1,5 +1,13 @@
 @import './base.css';
 
+body {
+  background: rgb(103, 168, 244);
+  background: -moz-linear-gradient(270deg, rgba(103, 168, 244, 1) 0%, rgba(66, 211, 146, 1) 78%);
+  background: -webkit-linear-gradient(270deg, rgba(103, 168, 244, 1) 0%, rgba(66, 211, 146, 1) 78%);
+  background: linear-gradient(270deg, rgba(103, 168, 244, 1) 0%, rgba(66, 211, 146, 1) 78%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#67a8f4",endColorstr="#42d392",GradientType=1);
+}
+
 #app {
   max-width: 1280px;
   margin: 0 auto;
@@ -27,7 +35,15 @@ a,
 }
 
 h1 {
+  font-size: 3rem;
   font-weight: bold;
+}
+
+main {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 @media (hover: hover) {

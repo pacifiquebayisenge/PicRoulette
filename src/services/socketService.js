@@ -11,12 +11,13 @@ class SocketService {
         query: { name: username }
       })
     }
+
     return this.socket
   }
 
   getSocket() {
     if (!this.socket) {
-      throw new Error('Socket not initialized. Call connect() first. ')
+      throw new Error('Socket not initialized. Call connect() first.')
     }
     return this.socket
   }

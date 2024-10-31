@@ -1,25 +1,27 @@
 <template>
-    <div class="score-container">
-        <h1 class="page-title">Score</h1>
+    <n-card>
+        <div class="score-container">
+            <h1 class="page-title">Score</h1>
 
-        <div class="score-results">
-            <div class="user-tag" v-for="(user, index) in userList" :key="index">
-                {{ `${(index + 1)}. ${user.emoji} ${user.name} ` }}
-                <n-tag :bordered="false" :color="index === 0 ? { color: '#FFD700', textColor: '#8B7500', borderColor: '#DAA520' }
-                    : index === 1 ? { color: '#C0C0C0', textColor: '#333', borderColor: '#A9A9A9' }
-                        : index === 2 ? { color: '#CD7F32', textColor: '#5A3D1E', borderColor: '#8C6239' }
-                            : undefined">
-                    {{ user.score }}
-                </n-tag>
+            <div class="score-results">
+                <div class="user-tag" v-for="(user, index) in userList" :key="index">
+                    {{ `${(index + 1)}. ${user.emoji} ${user.name} ` }}
+                    <n-tag :bordered="false" :color="index === 0 ? { color: '#FFD700', textColor: '#8B7500', borderColor: '#DAA520' }
+                        : index === 1 ? { color: '#C0C0C0', textColor: '#333', borderColor: '#A9A9A9' }
+                            : index === 2 ? { color: '#CD7F32', textColor: '#5A3D1E', borderColor: '#8C6239' }
+                                : undefined">
+                        {{ user.score }}
+                    </n-tag>
+                </div>
             </div>
+
+
+            <n-button @click="restart">
+                Restart Game
+            </n-button>
+
         </div>
-
-
-        <n-button @click="restart">
-            Restart Game
-        </n-button>
-
-    </div>
+    </n-card>
 </template>
 
 <script>
