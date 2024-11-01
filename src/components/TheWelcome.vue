@@ -186,8 +186,10 @@ export default {
         this.socket.on('newImage', () => {
           // TODO: notif when upload went succesfull
           // console.log(data)
+
           this.successUpload += 1
           this.updateOverallProgress()
+
         });
 
         // Listen for active users update from the server
@@ -288,8 +290,6 @@ export default {
     },
 
     async handleImageUpload(data) {
-      // Total progress of all files
-      this.uploadProgress = 0;
 
       const noDupliList = data.fileList.filter((file, index, self) =>
         index === self.findIndex((f) => (
@@ -413,6 +413,8 @@ export default {
     },
 
     updateOverallProgress() {
+      console.log(this.successUpload)
+      console.log(this.totalFiles)
 
       this.uploadProgress = Math.trunc((this.successUpload / this.totalFiles) * 100);
 
