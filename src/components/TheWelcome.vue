@@ -55,6 +55,7 @@
 
 
       <div v-if="user" class="progress-container">
+        <div v-if="processLabel && !uploadProgress">🍲 Cooking the images 🍳</div>
         <n-progress v-if="uploadProgress" type="line" color="#36ad6a" :percentage="uploadProgress"
           indicator-placement="inside" processing />
         Images Uploaded {{ successUpload }}
@@ -113,6 +114,7 @@ export default {
       namelist,
       totalFiles: 0, // total images user want to upload 
       imagePreviews: [], // Stores the base64 image previews
+      processLabel: false,
       uploadProgress: 0,
       successUpload: 0, // total images successfully uploaded,
       reconnect: false
@@ -291,6 +293,8 @@ export default {
 
     async handleImageUpload(data) {
 
+      this.processLabel = true
+
       const noDupliList = data.fileList.filter((file, index, self) =>
         index === self.findIndex((f) => (
           f.name === file.name
@@ -353,6 +357,7 @@ export default {
 
       await Promise.all(filePromises);
 
+
       // Console log statements
       if (filePromises.length === this.totalFiles) {
         this.sendToServer()
@@ -413,9 +418,6 @@ export default {
     },
 
     updateOverallProgress() {
-      console.log(this.successUpload)
-      console.log(this.totalFiles)
-
       this.uploadProgress = Math.trunc((this.successUpload / this.totalFiles) * 100);
 
       // Cap the progress at 100% once all uploads are done
