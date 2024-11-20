@@ -209,6 +209,12 @@ export default {
         });
 
         // Listen for disconnect event
+        this.socket.on('gameAlreadyStarted', (data) => {
+          this.fullRoomAlert(data)
+          console.log('Room is full');
+        });
+
+        // Listen for disconnect event
         this.socket.on('disconnected', (data) => {
           this.userLeftAlert(data)
           console.log('Disconnected from server');
@@ -289,6 +295,19 @@ export default {
         duration: 3000,
         closable: false // optional, duration in milliseconds
       });
+    },
+
+    fullRoomAlert(data) {
+      this.notification.create({
+        content: () => h(UserAlert, {
+          message: data.message,
+          alertType: 'error'
+        }),
+        duration: 3000,
+        closable: false // optional, duration in milliseconds
+      });
+
+
     },
 
     async handleImageUpload(data) {
@@ -424,7 +443,7 @@ export default {
       if (this.uploadProgress >= 100) {
         this.uploadProgress = 100;
       }
-    }
+    },
 
   },
 
