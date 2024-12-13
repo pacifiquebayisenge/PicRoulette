@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "browser-image-compression": "^2.0.2",
+    "canvas-confetti": "^1.9.3",
     "express": "^4.21.0",
     "pica": "^9.0.1",
     "socket.io": "^4.8.0",

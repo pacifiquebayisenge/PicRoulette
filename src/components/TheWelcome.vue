@@ -119,6 +119,7 @@ import socketService from "@/services/socketService";
 import userService from "@/services/userService";
 import gameService from "@/services/gameSercive";
 
+
 export default {
   data() {
     return {
@@ -159,6 +160,7 @@ export default {
     if (userService.getUser().name) {
       this.reconnectToSocket();
     }
+   
   },
 
   methods: {
@@ -468,6 +470,8 @@ export default {
         this.serverUploadProgress = 100;
       }
     },
+
+   
   },
 
   beforeUnmount() {

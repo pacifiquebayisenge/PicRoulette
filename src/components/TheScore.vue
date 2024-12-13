@@ -28,6 +28,8 @@
 import socketService from '@/services/socketService';
 import userService from '@/services/userService';
 
+import confetti from 'canvas-confetti';
+
 export default {
     data() {
         return {
@@ -41,6 +43,8 @@ export default {
     mounted() {
         this.user = userService.getUser();
         this.socket = socketService.getSocket();
+
+        this.launchConfetti()
 
 
         // Check if socket is connected
@@ -59,6 +63,13 @@ export default {
         });
     },
     methods: {
+        launchConfetti() {
+      confetti({
+        particleCount: 200, // Number of particles
+        spread: 90,         // Spread of the confetti
+        origin: { y: 0.6 }, // Launch point (y-axis: 0 = top, 1 = bottom)
+      });
+    },
         restart() {
             this.$router.push('/')
         },
