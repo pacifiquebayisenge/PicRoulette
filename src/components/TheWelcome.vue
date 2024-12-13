@@ -65,17 +65,10 @@
       </div>
 
       <div v-if="user" class="progress-container">
-        <div v-if="processLabel && !serverUploadProgress">🍲 Cooking the images 🍳</div>
-        <n-progress v-if="processLabel && !serverUploadProgress" type="line" :percentage="webUploadProgress" color="#67a8f3" :show-indicator="false" />
-        <n-progress
-          v-if="serverUploadProgress"
-          type="line"
-          color="#36ad6a"
-          :percentage="serverUploadProgress"
-          indicator-placement="inside"
-          processing
-        />
-        <div>Images Uploaded {{ successUpload }}</div>
+        <div v-if="processLabel && !uploadProgress">🍲 Cooking the images 🍳</div>
+        <n-progress v-if="uploadProgress" type="line" color="#36ad6a" :percentage="uploadProgress"
+          indicator-placement="inside" processing />
+        Images Uploaded {{ successUpload }}
       </div>
 
       <!-- Display active users count and names -->
@@ -134,8 +127,7 @@ export default {
       totalFiles: 0, // total images user want to upload
       imagePreviews: [], // Stores the base64 image previews
       processLabel: false,
-      webUploadProgress: 0,
-      serverUploadProgress: 0,
+      uploadProgress: 0,
       successUpload: 0, // total images successfully uploaded,
       reconnect: false,
     };
@@ -208,8 +200,9 @@ export default {
           // TODO: notif when upload went succesfull
           // console.log(data)
 
-          this.successUpload += 1;
-          this.updateOverallProgress();
+          this.successUpload += 1
+          this.updateOverallProgress()
+
         });
 
         // Listen for active users update from the server
@@ -226,15 +219,15 @@ export default {
         });
 
         // Listen for disconnect event
-        this.socket.on("gameAlreadyStarted", (data) => {
-          this.fullRoomAlert(data);
-          console.log("Room is full");
+        this.socket.on('gameAlreadyStarted', (data) => {
+          this.fullRoomAlert(data)
+          console.log('Room is full');
         });
 
         // Listen for disconnect event
-        this.socket.on("disconnected", (data) => {
-          this.userLeftAlert(data);
-          console.log("Disconnected from server");
+        this.socket.on('disconnected', (data) => {
+          this.userLeftAlert(data)
+          console.log('Disconnected from server');
         });
       }
     },
@@ -329,8 +322,10 @@ export default {
       });
     },
 
+
     async handleImageUpload(data) {
-      this.processLabel = true;
+
+      this.processLabel = true
 
       const noDupliList = data.fileList.filter(
         (file, index, self) => index === self.findIndex((f) => f.name === file.name)
@@ -396,9 +391,6 @@ export default {
 
       await Promise.all(filePromises);
 
-      this.webUploadProgress = (filePromises.length / this.totalFiles) * 100
-
-      // console.log((filePromises.length / this.totalFiles) * 100 + " %");
 
       // Console log statements
       if (filePromises.length === this.totalFiles) {
@@ -461,9 +453,7 @@ export default {
     },
 
     updateOverallProgress() {
-      this.serverUploadProgress = Math.trunc((this.successUpload / this.totalFiles) * 100);
-
-
+      this.uploadProgress = Math.trunc((this.successUpload / this.totalFiles) * 100);
 
       // Cap the progress at 100% once all uploads are done
       if (this.serverUploadProgress >= 100) {
