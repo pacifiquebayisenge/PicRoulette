@@ -66,7 +66,7 @@
 
       <div v-if="user" class="progress-container">
         <div v-if="processLabel && !serverUploadProgress">🍲 Cooking the images 🍳</div>
-        <n-progress v-if="processLabel && !serverUploadProgress" type="line" :percentage="webUploadProgress" color="#67a8f3" :show-indicator="false" />
+        <n-progress v-if="processLabel && !serverUploadProgress" type="line" :percentage="webUploadProgress" color="#67a8f3" :show-indicator="false" processing />
         <n-progress
           v-if="serverUploadProgress"
           type="line"
