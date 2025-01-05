@@ -501,6 +501,8 @@ export default {
 }
 
 h1 {
+  font-weight: 400;
+  font-family: 'Rammetto One', sans-serif;
   background: rgb(103, 168, 244);
   background: -moz-linear-gradient(
     270deg,
