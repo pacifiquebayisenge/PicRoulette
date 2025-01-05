@@ -2,7 +2,7 @@
   <n-card>
     <div class="home-component">
       <header>
-        <h1>Pic Roulette</h1>
+        <h1>Pic Roulette ABC°</h1>
       </header>
 
       <!-- Ask for the user's name if not yet set -->
