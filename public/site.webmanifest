@@ -4,7 +4,7 @@
   "start_url": "/",
   "display": "standalone",
   "background_color": "#67a9f3",
-  "theme_color": "#42d392",
+  "theme_color": "#67a8f4",
   "description": "Picture guessing game",
   "icons": [
     {

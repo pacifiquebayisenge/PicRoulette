@@ -21,6 +21,8 @@ export async function registerServiceWorker() {
     try {
       const registration = await navigator.serviceWorker.register('/service-worker.js')
       console.log('Service Worker registered:', registration)
+      console.log('install prompt?')
+      installPrompt()
 
       // Immediately check for updates
       console.log('Checking for updates...')
@@ -51,5 +53,4 @@ export async function registerServiceWorker() {
     }
   }
 
-  installPrompt()
 }
