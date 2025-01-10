@@ -32,7 +32,7 @@ export default defineConfig({
         name: 'Pic Roulette',
         short_name: 'PicRoulette',
         description: 'Picture geussing game',
-        theme_color: '#42d392',
+        theme_color: '#67a8f4',
         icons: [
           {
             src: 'pwa-192x192.png',
