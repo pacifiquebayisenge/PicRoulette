@@ -1,14 +1,5 @@
 @import './base.css';
 
-head, header {
-  background: rgb(103, 168, 244);
-  background: -moz-linear-gradient(270deg, rgba(103, 168, 244, 1) 0%, rgba(66, 211, 146, 1) 78%);
-  background: -webkit-linear-gradient(270deg, rgba(103, 168, 244, 1) 0%, rgba(66, 211, 146, 1) 78%);
-  background: linear-gradient(270deg, rgba(103, 168, 244, 1) 0%, rgba(66, 211, 146, 1) 78%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#67a8f4",endColorstr="#42d392",GradientType=1);
-
-}
-
 body {
   background: rgb(103, 168, 244);
   background: -moz-linear-gradient(270deg, rgba(103, 168, 244, 1) 0%, rgba(66, 211, 146, 1) 78%);
