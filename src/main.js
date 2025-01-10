@@ -9,6 +9,8 @@ import { injectSpeedInsights } from '@vercel/speed-insights'
 import { installPrompt } from './utils/installPrompt'
 import { registerServiceWorker } from './utils/registerServiceWorker' 
 
+import VConsole from 'vconsole';
+
 inject()
 injectSpeedInsights()
 
@@ -22,3 +24,7 @@ app.mount('#app')
 registerServiceWorker()
 
 installPrompt()
+
+
+// eslint-disable-next-line no-unused-vars
+const vConsole = new VConsole();
