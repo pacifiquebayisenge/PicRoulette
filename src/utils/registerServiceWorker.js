@@ -1,4 +1,6 @@
 import { createApp } from 'vue'
+import { installPrompt } from './installPrompt'
+
 
 export async function registerServiceWorker() {
   if ('serviceWorker' in navigator) {
@@ -48,4 +50,6 @@ export async function registerServiceWorker() {
       console.error('Service Worker registration failed:', error)
     }
   }
+
+  installPrompt()
 }

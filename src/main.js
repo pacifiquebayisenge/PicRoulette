@@ -6,7 +6,7 @@ import router from './router'
 import naive from 'naive-ui'
 import { inject } from '@vercel/analytics'
 import { injectSpeedInsights } from '@vercel/speed-insights'
-import { installPrompt } from './utils/installPrompt'
+
 import { registerServiceWorker } from './utils/registerServiceWorker' 
 
 import VConsole from 'vconsole';
@@ -23,7 +23,7 @@ app.mount('#app')
 
 registerServiceWorker()
 
-installPrompt()
+
 
 
 // eslint-disable-next-line no-unused-vars
