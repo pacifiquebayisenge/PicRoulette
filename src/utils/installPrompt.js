@@ -1,8 +1,10 @@
 import { createDiscreteApi } from 'naive-ui'
+const { dialog } = createDiscreteApi(['dialog'])
+
 import { h } from 'vue'
 
 // Create a discrete API instance for dialogs
-const { dialog } = createDiscreteApi(['dialog'])
+
 
 let deferredPrompt = null
 
@@ -12,13 +14,9 @@ function isIOS() {
 }
 
 function showInstallPrompt() {
- 
-  
-  
-  // Display the dialog after 5 seconds
   setTimeout(() => {
     if (isIOS()) {
-      // Show a custom dialog for iOS
+      // Show iOS instructions
       dialog.info({
         title: 'Install Pic Roulette',
         content: () => {
@@ -39,51 +37,31 @@ function showInstallPrompt() {
         positiveText: 'Got it!',
         bordered: true,
         class: 'install-dialog-container',
-        showIcon: false,
-        onPositiveClick: () => {
-          console.log('User acknowledged iOS install instructions')
-        }
+        showIcon: false
       })
     } else if (deferredPrompt) {
-      // Show the default install dialog
-      dialog.info({
-        title: 'Install Pic Roulette',
-        content: 'Click here to install Pic Roulette on your device',
-        positiveText: 'Install',
-        bordered: true,
-        class: 'install-dialog-container',
-        showIcon: false,
-        onPositiveClick: () => {
-          handleInstallClick()
-        }
+      // Directly trigger the browser's install prompt
+      deferredPrompt.prompt()
+      
+      deferredPrompt.userChoice.then((choiceResult) => {
+        console.log(
+          choiceResult.outcome === 'accepted'
+            ? 'User accepted the install prompt'
+            : 'User dismissed the install prompt'
+        )
+        deferredPrompt = null
       })
     }
   }, 3000) // 3-second delay
 }
 
-function handleInstallClick() {
-  if (!deferredPrompt) return
-
-  // Show the native install prompt
-  deferredPrompt.prompt()
-
-  deferredPrompt.userChoice.then((choiceResult) => {
-    console.log(
-      choiceResult.outcome === 'accepted'
-        ? 'User accepted the install prompt'
-        : 'User dismissed the install prompt'
-    )
-    deferredPrompt = null // Reset the prompt
-  })
-}
-
 function installPrompt() {
   window.addEventListener('beforeinstallprompt', (e) => {
     console.log('beforeinstallprompt fired')
-    // e.preventDefault() // Prevent the mini-infobar from appearing on mobile
-    deferredPrompt = e // Store the event for later use
-
-    showInstallPrompt() // Show the install prompt with a delay
+    e.preventDefault() // Prevent the mini-infobar from appearing on mobile
+    deferredPrompt = e // Store the event
+    
+    showInstallPrompt() // Show the install prompt with delay
   })
 
   window.addEventListener('appinstalled', (event) => {
