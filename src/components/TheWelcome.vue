@@ -1,6 +1,5 @@
 <template>
   <n-card>
-    <InstallPrompt />
     <div class="home-component">
       <header>
         <h1>Pic Roulette</h1>
@@ -126,10 +125,8 @@ import { MAX_IMAGE_UPLOAD } from "@/constants";
 import socketService from "@/services/socketService";
 import userService from "@/services/userService";
 import gameService from "@/services/gameSercive";
-import InstallPrompt from "./alerts/InstallPrompt.vue";
 
 export default {
-  components: [InstallPrompt],
   data() {
     return {
       socket: null,

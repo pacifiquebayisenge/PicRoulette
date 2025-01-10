@@ -80,7 +80,7 @@ function handleInstallClick() {
 function installPrompt() {
   window.addEventListener('beforeinstallprompt', (e) => {
     console.log('beforeinstallprompt fired')
-    e.preventDefault() // Prevent the mini-infobar from appearing on mobile
+    // e.preventDefault() // Prevent the mini-infobar from appearing on mobile
     deferredPrompt = e // Store the event for later use
 
     showInstallPrompt() // Show the install prompt with a delay
