@@ -14,7 +14,7 @@ export default defineConfig({
       strategies: 'injectManifest', // Specify injectManifest strategy
       srcDir: 'src', // Source directory where your service-worker.js is located
       filename: 'service-worker.js', // Output file name for the service worker
-      registerType: 'autoUpdate',
+      registerType: 'prompt',
       publicDir: 'public',
       injectManifest: {
         swSrc: 'src/service-worker.js', // Source service worker file
@@ -24,6 +24,9 @@ export default defineConfig({
         cleanupOutdatedCaches: true,
 
         globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+      },
+      devOptions: {
+        enabled: true // Enable PWA in development
       },
       manifest: {
         name: 'Pic Roulette',
