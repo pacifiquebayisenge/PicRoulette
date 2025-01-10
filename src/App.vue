@@ -1,5 +1,10 @@
 <template>
-  <n-notification-provider container-class="notification" :scrollable='false' :max='3' placement='bottom'>
+  <n-notification-provider
+    container-class="notification"
+    :scrollable="false"
+    :max="3"
+    placement="bottom"
+  >
     <RouterView />
   </n-notification-provider>
 </template>

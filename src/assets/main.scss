@@ -34,6 +34,36 @@ a,
   }
 }
 
+.install-dialog-container {
+  
+  .n-dialog__title {
+    font-weight: 400;
+    font-family: "Rammetto One", sans-serif;
+    background: rgb(103, 168, 244);
+    background: -moz-linear-gradient(270deg, rgb(103, 168, 244) 0%, rgb(66, 211, 146) 78%);
+    background: -webkit-linear-gradient(270deg, rgb(103, 168, 244) 0%, rgb(66, 211, 146) 78%);
+    background: linear-gradient(270deg, rgb(103, 168, 244) 0%, rgb(66, 211, 146) 78%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#67a8f4", endColorstr="#42d392", GradientType=1);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+    .n-dialog__content div {
+      p,span {
+        color: #66a8f2;
+        font-weight: 900;
+      }
+
+      span {
+        text-decoration: underline;
+      }
+    }
+  .n-dialog__action {
+    justify-content: center;
+  }
+}
+
 h1 {
   font-size: 3rem;
   font-weight: bold;

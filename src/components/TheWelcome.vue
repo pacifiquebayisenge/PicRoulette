@@ -1,5 +1,6 @@
 <template>
   <n-card>
+    <InstallPrompt />
     <div class="home-component">
       <header>
         <h1>Pic Roulette</h1>
@@ -66,7 +67,14 @@
 
       <div v-if="user" class="progress-container">
         <div v-if="processLabel && !serverUploadProgress">🍲 Cooking the images 🍳</div>
-        <n-progress v-if="processLabel && !serverUploadProgress" type="line" :percentage="webUploadProgress" color="#67a8f3" :show-indicator="false" processing />
+        <n-progress
+          v-if="processLabel && !serverUploadProgress"
+          type="line"
+          :percentage="webUploadProgress"
+          color="#67a8f3"
+          :show-indicator="false"
+          processing
+        />
         <n-progress
           v-if="serverUploadProgress"
           type="line"
@@ -118,8 +126,10 @@ import { MAX_IMAGE_UPLOAD } from "@/constants";
 import socketService from "@/services/socketService";
 import userService from "@/services/userService";
 import gameService from "@/services/gameSercive";
+import InstallPrompt from "./alerts/InstallPrompt.vue";
 
 export default {
+  components: [InstallPrompt],
   data() {
     return {
       socket: null,
@@ -159,7 +169,6 @@ export default {
     if (userService.getUser().name) {
       this.reconnectToSocket();
     }
-   
   },
 
   methods: {
@@ -328,7 +337,6 @@ export default {
       });
     },
 
-
     async handleImageUpload(data) {
       this.processLabel = true;
 
@@ -396,7 +404,7 @@ export default {
 
       await Promise.all(filePromises);
 
-      this.webUploadProgress = (filePromises.length / this.totalFiles) * 100
+      this.webUploadProgress = (filePromises.length / this.totalFiles) * 100;
 
       // Console log statements
       if (filePromises.length === this.totalFiles) {
@@ -459,7 +467,9 @@ export default {
     },
 
     updateOverallProgress() {
-      this.serverUploadProgress = Math.trunc((this.successUpload / this.totalFiles) * 100);
+      this.serverUploadProgress = Math.trunc(
+        (this.successUpload / this.totalFiles) * 100
+      );
 
       // Cap the progress at 100% once all uploads are done
       if (this.serverUploadProgress >= 100) {
@@ -501,6 +511,8 @@ export default {
 }
 
 h1 {
+  font-weight: 400;
+  font-family: "Rammetto One", sans-serif;
   background: rgb(103, 168, 244);
   background: -moz-linear-gradient(
     270deg,
@@ -600,7 +612,6 @@ h1 {
     gap: 2rem;
     margin: 1rem;
     text-align: center;
-
 
     .n-progress .n-progress-graph-line-indicator {
       text-align: center !important;
