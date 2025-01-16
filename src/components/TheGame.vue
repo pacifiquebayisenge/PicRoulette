@@ -140,20 +140,21 @@ export default {
 
         .image-wrapper {
           width: 100%;
-          max-width: 70rem; // Converted from 700px
-          aspect-ratio: 16 / 9;
+          max-width: 70rem; // Limit maximum width for larger screens
+          height: 60vh; // Max height is 60% of the viewport height
           display: flex;
           justify-content: center;
           align-items: center;
           background-color: #f5f5f5;
-          border-radius: 0.8rem; // Converted from 8px
+          border-radius: 0.8rem;
           overflow: hidden;
-        }
 
-        .responsive-image {
-          max-width: 100%;
-          max-height: 100%;
-          object-fit: contain;
+          img {
+            width: 70vw; // 70% of the viewport width
+            height: auto; // Maintain aspect ratio
+            max-height: 100%; // Ensure image doesn't exceed the max height
+            object-fit: contain; // Preserve aspect ratio without distortion
+          }
         }
       }
     }
