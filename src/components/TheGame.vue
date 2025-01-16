@@ -117,7 +117,7 @@ export default {
   gap: 2rem;
 
   .game-card {
-    max-width: 1000px;
+    max-width: 100rem;
     width: 100%;
     margin: 0 auto;
     padding: 1rem;
@@ -128,7 +128,7 @@ export default {
       align-items: center;
 
       .page-title {
-        font-size: clamp(20px, 4vw, 24px);
+        font-size: clamp(2rem, 4vw, 2.4rem); // Already in rem
         text-align: center;
         margin-bottom: 1rem;
       }
@@ -140,13 +140,13 @@ export default {
 
         .image-wrapper {
           width: 100%;
-          max-width: 700px;
+          max-width: 70rem; // Converted from 700px
           aspect-ratio: 16 / 9;
           display: flex;
           justify-content: center;
           align-items: center;
           background-color: #f5f5f5;
-          border-radius: 8px;
+          border-radius: 0.8rem; // Converted from 8px
           overflow: hidden;
         }
 
@@ -165,34 +165,33 @@ export default {
     justify-content: center;
     gap: 1rem;
     width: 100%;
-    max-width: 700px; // Match card width
+    max-width: 70rem; // Converted from 700px
     padding: 1rem;
     overflow: hidden;
     overflow-y: scroll;
 
     scrollbar-width: none;
 
-    /* Hide scrollbar in Firefox */
+    // Hide scrollbar in Firefox
     &::-webkit-scrollbar {
-      display: none;
-      /* Hide scrollbar in webkit-based browsers like Chrome, Safari */
+      display: none; // Hide scrollbar in webkit-based browsers
     }
 
     .send-response-btn {
       position: relative;
       padding: 0.75rem 1.5rem;
       background: #ffffff;
-      border: 2px solid #b9baba;
-      border-radius: 8px;
-      transform: translateY(-4px);
+      border: 0.2rem solid #b9baba; // Converted from 2px
+      border-radius: 0.8rem; // Converted from 8px
+      transform: translateY(-0.4rem); // Converted from -4px
       transition: all 0.1s ease;
 
       // 3D effect
-      box-shadow: 0 4px 0 #b9baba, 0 4px 6px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 0.4rem 0 #b9baba, 0 0.4rem 0.6rem rgba(0, 0, 0, 0.1); // Converted from 4px and 6px
 
       &:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 5px 0 #b9baba, 0 5px 6px rgba(0, 0, 0, 0.1);
+        transform: translateY(-0.5rem); // Converted from -5px
+        box-shadow: 0 0.5rem 0 #b9baba, 0 0.5rem 0.6rem rgba(0, 0, 0, 0.1); // Converted from 5px and 6px
       }
 
       &:active {
@@ -205,10 +204,10 @@ export default {
         background: #cceada;
         border-color: #aad3bb;
         color: #2c7a4d; // Darker text for contrast
-        box-shadow: 0 4px 0 #aad3bb, 0 4px 6px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 0.4rem 0 #aad3bb, 0 0.4rem 0.6rem rgba(0, 0, 0, 0.1); // Converted from 4px and 6px
 
         &:hover {
-          box-shadow: 0 5px 0 #aad3bb, 0 5px 6px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 0.5rem 0 #aad3bb, 0 0.5rem 0.6rem rgba(0, 0, 0, 0.1); // Converted from 5px and 6px
         }
 
         &:active {
@@ -221,10 +220,10 @@ export default {
         background: #ffd6d6;
         border-color: #ffb3b3;
         color: #d03050;
-        box-shadow: 0 4px 0 #ffb3b3, 0 4px 6px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 0.4rem 0 #ffb3b3, 0 0.4rem 0.6rem rgba(0, 0, 0, 0.1); // Converted from 4px and 6px
 
         &:hover {
-          box-shadow: 0 5px 0 #ffb3b3, 0 5px 6px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 0.5rem 0 #ffb3b3, 0 0.5rem 0.6rem rgba(0, 0, 0, 0.1); // Converted from 5px and 6px
         }
 
         &:active {
@@ -236,7 +235,8 @@ export default {
 }
 
 // Adjustments for responsiveness
-@media (max-width: 768px) {
+@media (max-width: 76.8rem) {
+  // Converted from 768px
   .game-page {
     gap: 1rem;
 
