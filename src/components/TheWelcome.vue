@@ -1,117 +1,87 @@
 <template>
-  <n-card>
-    <div class="home-component">
-      <header>
-        <h1>Pic Roulette</h1>
-      </header>
+  <div class="home-component">
+    <n-card>
+      <div class="home-component">
+        <header>
+          <h1>Pic Roulette</h1>
+        </header>
 
-      <!-- Ask for the user's name if not yet set -->
-      <div v-if="!user" class="container">
-        <n-input
-          v-model:value="name"
-          type="text"
-          size="large"
-          :maxlength="15"
-          :placeholder="getPlaceholder || 'Enter your name'"
-        />
-        <n-button @click="connectToSocket">Connect</n-button>
-      </div>
+        <!-- Ask for the user's name if not yet set -->
+        <div v-if="!user" class="container">
+          <n-input
+            v-model:value="name"
+            type="text"
+            size="large"
+            :maxlength="15"
+            :placeholder="getPlaceholder || 'Enter your name'"
+          />
+          <n-button @click="connectToSocket">Connect</n-button>
+        </div>
 
-      <!-- Show the comment input if connected -->
-      <div v-if="user" class="container">
-        <n-input
-          v-model:value="comment"
-          type="textarea"
-          placeholder="Enter your comment"
-          :maxlength="150"
-          :autosize="{
-            minRows: 2,
-            maxRows: 3,
-          }"
-        />
-        <n-button @click="sendComment">Send Comment</n-button>
+        <!-- <CommentsContainer /> -->
 
-        <!-- Display comments -->
-        <div class="chat-container" ref="chatContainer">
-          <div v-for="(comment, index) in comments" :key="index" class="chat-body">
-            <div>
-              <n-ellipsis style="max-width: 12rem">
-                {{ comment.emoji }} {{ comment.name }}
-              </n-ellipsis>
-            </div>
+        <div v-if="user" class="images-container">
+          <n-upload
+            :disabled="successUpload >= 15"
+            :min="5"
+            :multiple="true"
+            :show-file-list="false"
+            @change="handleImageUpload"
+            accept="image/*"
+          >
+            <n-button>Upload</n-button>
+          </n-upload>
+        </div>
 
-            <div>
-              <n-gradient-text :type="comment.id === user.id ? 'success' : 'info'">
-                {{ comment.message }}
-              </n-gradient-text>
-            </div>
-          </div>
+        <div v-if="user" class="progress-container">
+          <div v-if="processLabel && !serverUploadProgress">🍲 Cooking the images 🍳</div>
+          <n-progress
+            v-if="processLabel && !serverUploadProgress"
+            type="line"
+            :percentage="webUploadProgress"
+            color="#67a8f3"
+            :show-indicator="false"
+            processing
+          />
+          <n-progress
+            v-if="serverUploadProgress"
+            type="line"
+            color="#36ad6a"
+            :percentage="serverUploadProgress"
+            indicator-placement="inside"
+            processing
+          />
+          <div>Images Uploaded {{ successUpload }}</div>
         </div>
       </div>
+    </n-card>
 
-      <div v-if="user" class="images-container">
-        <h2>Upload images</h2>
+    <!-- Display active users count and names -->
+    <div v-if="activeUsers.length" class="active-users-container">
+      <h2>Active Users ({{ activeUsers.length }}):</h2>
 
-        <n-upload
-          :disabled="successUpload >= 15"
-          :min="5"
-          :multiple="true"
-          :show-file-list="false"
-          @change="handleImageUpload"
-          accept="image/*"
-        >
-          <n-button>Upload File</n-button>
-        </n-upload>
-      </div>
+      <div>
+        <div v-for="(user, index) in activeUsers" :key="index" class="user-component">
+          <div>{{ user.emoji }}</div>
 
-      <div v-if="user" class="progress-container">
-        <div v-if="processLabel && !serverUploadProgress">🍲 Cooking the images 🍳</div>
-        <n-progress
-          v-if="processLabel && !serverUploadProgress"
-          type="line"
-          :percentage="webUploadProgress"
-          color="#67a8f3"
-          :show-indicator="false"
-          processing
-        />
-        <n-progress
-          v-if="serverUploadProgress"
-          type="line"
-          color="#36ad6a"
-          :percentage="serverUploadProgress"
-          indicator-placement="inside"
-          processing
-        />
-        <div>Images Uploaded {{ successUpload }}</div>
-      </div>
-
-      <!-- Display active users count and names -->
-      <div v-if="activeUsers.length" class="active-users-container">
-        <h2>Active Users ({{ activeUsers.length }}):</h2>
-
-        <div>
-          <div v-for="(user, index) in activeUsers" :key="index" class="user-component">
-            <div>{{ user.emoji }}</div>
-
-            <div>
-              <n-ellipsis style="max-width: 12rem">
-                {{ user.name }}
-              </n-ellipsis>
-            </div>
-
-            <n-tag
-              class="state-tag"
-              :bordered="false"
-              round
-              :type="user.state === 'Ready' ? 'success' : 'warning'"
-            >
-              {{ user.state }}
-            </n-tag>
+          <div>
+            <n-ellipsis style="max-width: 12rem">
+              {{ user.name }}
+            </n-ellipsis>
           </div>
+
+          <n-tag
+            class="state-tag"
+            :bordered="false"
+            round
+            :type="user.state === 'Ready' ? 'success' : 'warning'"
+          >
+            {{ user.state }}
+          </n-tag>
         </div>
       </div>
     </div>
-  </n-card>
+  </div>
 </template>
 
 <script>
@@ -127,6 +97,7 @@ import userService from "@/services/userService";
 import gameService from "@/services/gameSercive";
 
 export default {
+  components: {},
   data() {
     return {
       socket: null,
@@ -592,6 +563,7 @@ h1 {
   }
 
   .images-container {
+    margin-top: 2rem;
     display: flex;
     flex-direction: column;
     gap: 2rem;
@@ -616,6 +588,8 @@ h1 {
   }
 
   .active-users-container {
+    margin-top: 2rem;
+
     h2 {
       text-align: center;
     }
@@ -628,6 +602,8 @@ h1 {
       max-height: 20rem;
       padding: 1rem;
 
+      filter: drop-shadow(5px 7px 7px #515151);
+
       &::-webkit-scrollbar {
         display: none;
         /* Hide the scrollbar */
@@ -637,13 +613,16 @@ h1 {
       scrollbar-width: none;
 
       .user-component {
-        padding: 0.5rem;
+        padding: 1rem;
         margin: 0 0.5rem;
         display: flex;
         flex-direction: column;
         align-content: center;
         justify-content: center;
         width: fit-content;
+
+        background-color: whitesmoke;
+        border-radius: 10px;
 
         div {
           text-align: center;
