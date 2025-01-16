@@ -114,91 +114,70 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3rem;
+  gap: 2rem;
 
-  // Card styling to limit width
   .game-card {
     max-width: 1000px;
+    width: 100%;
     margin: 0 auto;
-
-    @media (max-width: 1300px) {
-      margin: 0 2rem;
-    }
-
-    @media (max-width: 768px) {
-      margin: 0 1rem;
-    }
+    padding: 1rem;
 
     .game-container {
       display: flex;
       flex-direction: column;
       align-items: center;
-      overflow: hidden;
-      padding: 1rem;
 
       .page-title {
         font-size: clamp(20px, 4vw, 24px);
         text-align: center;
-        margin-bottom: 0.5rem;
+        margin-bottom: 1rem;
       }
 
       .image-container {
         width: 100%;
         display: flex;
         justify-content: center;
-        margin: 0.5rem 0;
-        padding: 0.5rem;
-      }
 
-      .image-wrapper {
-        width: 100%;
-        max-width: 700px; // Maximum width of the image container
-        aspect-ratio: 16 / 9; // Maintain a consistent aspect ratio
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: #f5f5f5; // Light background to show image bounds
-        border-radius: 8px;
-        overflow: hidden;
-      }
+        .image-wrapper {
+          width: 100%;
+          max-width: 700px;
+          aspect-ratio: 16 / 9;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background-color: #f5f5f5;
+          border-radius: 8px;
+          overflow: hidden;
+        }
 
-      .responsive-image {
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
-        display: block;
+        .responsive-image {
+          max-width: 100%;
+          max-height: 100%;
+          object-fit: contain;
+        }
       }
     }
   }
 
-  //   .voting-btns {
-  //     display: flex;
-  //     flex-wrap: wrap;
-  //     justify-content: center;
-  //     gap: 1rem;
-  //     width: 100%;
-  //     max-width: 700px; // Match image container max-width
-  //     margin-top: 1.5rem;
-  //     overflow-y: auto;
-  //     max-height: 15vh;
-  //     padding: 0.5rem;
-  //     scrollbar-width: none;
-
-  //     &::-webkit-scrollbar {
-  //       display: none;
-  //     }
-
-  //     .send-response-btn {
-  //       border: solid #b9baba 0.125rem;
-  //       min-width: 120px;
-
-  //       span span span {
-  //         font-weight: bold;
-  //       }
-  //     }
-  //   }
-
   .voting-btns {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    width: 100%;
+    max-width: 700px; // Match card width
+    padding: 1rem;
+    overflow: hidden;
+    overflow-y: scroll;
+
+    scrollbar-width: none;
+
+    /* Hide scrollbar in Firefox */
+    &::-webkit-scrollbar {
+      display: none;
+      /* Hide scrollbar in webkit-based browsers like Chrome, Safari */
+    }
+
     .send-response-btn {
       position: relative;
       padding: 0.75rem 1.5rem;
@@ -252,50 +231,18 @@ export default {
           box-shadow: 0 0 0 #ffb3b3, 0 0 0 rgba(0, 0, 0, 0.1);
         }
       }
-
-      span span span {
-        font-weight: bold;
-      }
     }
   }
 }
 
-// Responsive breakpoints
-@media (min-width: 1024px) {
-  .game-container {
-    .image-wrapper {
-      min-height: 300px;
-      max-height: 400px;
-    }
-
-    .voting-btns {
-      max-height: 12vh;
-    }
-  }
-}
-
+// Adjustments for responsiveness
 @media (max-width: 768px) {
-  .game-container {
-    .image-wrapper {
-      aspect-ratio: 4 / 3; // Slightly different aspect ratio for mobile
-      min-height: 300px;
-      max-height: 450px;
-    }
+  .game-page {
+    gap: 1rem;
 
     .voting-btns {
-      width: 100%;
-      max-height: 25vh;
       gap: 0.75rem;
-    }
-  }
-}
-
-// Small screens
-@media (max-width: 480px) {
-  .game-container {
-    .image-wrapper {
-      min-height: 250px;
-      max-height: 350px;
+      padding: 0.5rem;
     }
   }
 }
