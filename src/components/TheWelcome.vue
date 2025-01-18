@@ -531,7 +531,6 @@ h1 {
     transform: translateY(-0.4rem);
     transition: all 0.1s ease;
     box-shadow: 0 0.4rem 0 #b9baba, 0 0.4rem 0.6rem rgba(0, 0, 0, 0.1);
-
     &:hover {
       background: #ffffff; /* Force white background on hover */
       transform: translateY(-0.5rem);

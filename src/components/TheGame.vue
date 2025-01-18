@@ -7,6 +7,7 @@
         <div class="image-container">
           <div class="image-wrapper">
             <img
+              v-if="currentImageobject?.file?.url"
               :src="currentImageobject?.file?.url"
               alt="Game Image"
               class="responsive-image"
