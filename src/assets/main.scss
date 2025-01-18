@@ -47,9 +47,17 @@ a,
   100% {
     top: 0; /* End at the original position */
     opacity: 1; /* Fully visible */
-    
-      filter: drop-shadow(5px 6px 11px #515151);
-    
+
+    filter: drop-shadow(5px 6px 11px #515151);
+  }
+}
+
+// Adjustments for responsiveness
+@media (max-width: 76.8rem) {
+  .n-card {
+    top: 0;
+    animation: none;
+    filter: drop-shadow(5px 6px 11px #515151);
   }
 }
 
