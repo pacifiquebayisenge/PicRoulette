@@ -7,7 +7,7 @@
         <div class="image-container">
           <div class="image-wrapper">
             <img
-              :src="currentImageobject?.file?.url || '../../public/IRD_Banner.png'"
+              :src="currentImageobject?.file?.url"
               alt="Game Image"
               class="responsive-image"
             />
@@ -230,6 +230,10 @@ export default {
         &:active {
           box-shadow: 0 0 0 #ffb3b3, 0 0 0 rgba(0, 0, 0, 0.1);
         }
+      }
+
+      .n-ellipsis span {
+        font-weight: bold;
       }
     }
   }
