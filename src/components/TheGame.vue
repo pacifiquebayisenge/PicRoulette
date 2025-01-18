@@ -7,8 +7,7 @@
         <div class="image-container">
           <div class="image-wrapper">
             <img
-              v-if="currentImageobject?.file?.url"
-              :src="currentImageobject?.file?.url"
+              :src="currentImageobject?.file?.url || '/empty_space.gif'"
               alt="Game Image"
               class="responsive-image"
             />
@@ -146,7 +145,7 @@ export default {
           display: flex;
           justify-content: center;
           align-items: center;
-          background-color: #f5f5f5;
+          // background-color: #f5f5f5;
           border-radius: 0.8rem;
           overflow: hidden;
 
