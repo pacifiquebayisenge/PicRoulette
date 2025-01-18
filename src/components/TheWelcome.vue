@@ -15,7 +15,7 @@
             :maxlength="15"
             :placeholder="getPlaceholder || 'Enter your name'"
           />
-          <n-button @click="connectToSocket">Connect</n-button>
+          <n-button :bordered="false" @click="connectToSocket">Connect</n-button>
         </div>
 
         <!-- <CommentsContainer /> -->
@@ -29,7 +29,7 @@
             @change="handleImageUpload"
             accept="image/*"
           >
-            <n-button>Upload</n-button>
+            <n-button :bordered="false">Upload</n-button>
           </n-upload>
         </div>
 
@@ -474,10 +474,6 @@ export default {
   transition: width 0.3s ease;
 }
 
-.n-card {
-  filter: drop-shadow(5px 6px 11px #515151);
-}
-
 h1 {
   font-weight: 400;
   font-family: "Rammetto One", sans-serif;
@@ -497,6 +493,7 @@ h1 {
     rgba(103, 168, 244, 1) 0%,
     rgba(66, 211, 146, 1) 78%
   );
+
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#67a8f4", endColorstr="#42d392", GradientType=1);
 
   /* Text-specific properties */
@@ -523,6 +520,33 @@ h1 {
 
   button span {
     font-weight: bolder;
+  }
+
+  button {
+    position: relative;
+    padding: 0.75rem 1.5rem;
+    background: #ffffff;
+    border: 0.2rem solid #b9baba;
+    border-radius: 0.8rem;
+    transform: translateY(-0.4rem);
+    transition: all 0.1s ease;
+    box-shadow: 0 0.4rem 0 #b9baba, 0 0.4rem 0.6rem rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      background: #ffffff; /* Force white background on hover */
+      transform: translateY(-0.5rem);
+      box-shadow: 0 0.5rem 0 #b9baba, 0 0.5rem 0.6rem rgba(0, 0, 0, 0.1);
+    }
+
+    &:active {
+      background: #ffffff; /* Force white background on active */
+      transform: translateY(0);
+      box-shadow: 0 0 0 #b9baba, 0 0 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .n-button__content {
+      font-weight: bolder;
+    }
   }
 
   .chat-container {
@@ -614,7 +638,7 @@ h1 {
 
       .user-component {
         padding: 1rem;
-        margin: 0 0.5rem;
+        margin: 0.5rem;
         display: flex;
         flex-direction: column;
         align-content: center;
