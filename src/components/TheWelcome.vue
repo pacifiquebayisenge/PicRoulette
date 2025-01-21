@@ -1,5 +1,24 @@
 <template>
   <div class="home-component">
+    <div>
+      <n-button
+        v-if="notificationPermission === 'default'"
+        @click="requestNotificationPermission"
+      >
+        Enable Notifications
+      </n-button>
+
+      <n-button
+        v-else-if="notificationPermission === 'denied'"
+        @click="showPermissionInstructions"
+        type="warning"
+      >
+        Enable Notifications in Settings
+      </n-button>
+
+      <n-button v-else disabled type="success"> Notifications Enabled </n-button>
+    </div>
+
     <n-card>
       <div class="home-component">
         <header>
@@ -133,13 +152,18 @@ export default {
       const randomIndex = Math.floor(Math.random() * this.namelist.length);
       return this.namelist[randomIndex]; // return the random name
     },
+    // Add this new computed property
+    notificationPermission() {
+      return window.Notification?.permission || "default";
+    },
   },
   mounted() {
     if (userService.getUser().name) {
       this.reconnectToSocket();
     }
 
-    this.requestNotificationPermission();
+    // Don't request immediately, just check current status
+    this.checkNotificationPermission();
   },
 
   methods: {
@@ -448,13 +472,60 @@ export default {
       }
     },
 
-    async requestNotificationPermission() {
-      const permission = await Notification.requestPermission();
-      if (permission === "granted") {
-        await subscribeToPushNotifications();
-      } else {
-        alert("Push notifications permission denied.");
+    checkNotificationPermission() {
+      if (!("Notification" in window)) {
+        console.log("This browser does not support notifications");
+        return;
       }
+
+      if (Notification.permission === "denied") {
+        console.log("Notifications were previously denied");
+        return;
+      }
+
+      if (Notification.permission === "granted") {
+        console.log("Notifications already permitted");
+        return;
+      }
+
+      console.log("Notification permission not decided yet");
+    },
+
+    async requestNotificationPermission() {
+      if (!("Notification" in window)) {
+        this.$dialog.warning({
+          title: "Notifications Not Supported",
+          content: "Your browser does not support notifications.",
+          positiveText: "OK",
+        });
+        return;
+      }
+
+      try {
+        const permission = await Notification.requestPermission();
+        if (permission === "granted") {
+          await subscribeToPushNotifications();
+        } else {
+          this.$dialog.warning({
+            title: "Notifications Disabled",
+            content:
+              "You will not receive push notifications. You can enable them in your browser settings if you change your mind.",
+            positiveText: "OK",
+          });
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        this.showError(error);
+      }
+    },
+
+    showPermissionInstructions() {
+      this.$dialog.info({
+        title: "Enable Notifications",
+        content:
+          'To enable notifications:\n1. Click the lock icon in your browser\'s address bar\n2. Find "Notifications" in the permissions list\n3. Change the setting to "Allow"',
+        positiveText: "OK",
+      });
     },
   },
 
