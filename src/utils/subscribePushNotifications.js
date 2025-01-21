@@ -21,8 +21,7 @@ export async function subscribeToPushNotifications() {
 
     console.log('Push Subscription:', subscription);
 
-    // Send the subscription to your server
-    await fetch(`${import.meta.env.VITE_SERVER_URL}/api/subscribe`, {
+    const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/subscribe`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -30,8 +29,14 @@ export async function subscribeToPushNotifications() {
       body: JSON.stringify(subscription),
     });
 
-    console.log('Subscribed to push notifications!');
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('Subscription successful:', data);
   } catch (error) {
     console.error('Error subscribing to push notifications:', error);
+    throw error; // Re-throw to handle it in the component
   }
 }
