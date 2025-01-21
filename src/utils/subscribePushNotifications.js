@@ -21,13 +21,15 @@ export async function subscribeToPushNotifications() {
 
     console.log('Push Subscription:', subscription);
 
-    const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/subscribe`, {
+    const response = await fetch(`${import.meta.env.VITE_PUSH_SERVER_URL}/api/subscribe`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(subscription),
     });
+
+    console.log('Response from server:', response);  
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
