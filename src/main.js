@@ -9,7 +9,7 @@ import { injectSpeedInsights } from '@vercel/speed-insights'
 
 import { registerServiceWorker } from './utils/registerServiceWorker' 
 
-// import VConsole from 'vconsole';
+import VConsole from 'vconsole';
 
 inject()
 injectSpeedInsights()
@@ -26,5 +26,5 @@ registerServiceWorker()
 
 
 
-// // eslint-disable-next-line no-unused-vars
-// const vConsole = new VConsole();
+// eslint-disable-next-line no-unused-vars
+const vConsole = new VConsole();
