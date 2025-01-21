@@ -32,6 +32,7 @@ export default defineConfig({
         name: 'Pic Roulette',
         short_name: 'PicRoulette',
         description: 'Picture geussing game',
+        permissions: ["push", "notifications"],
         theme_color: '#42d392',
         icons: [
           {

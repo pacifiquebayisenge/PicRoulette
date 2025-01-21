@@ -95,6 +95,7 @@ import { MAX_IMAGE_UPLOAD } from "@/constants";
 import socketService from "@/services/socketService";
 import userService from "@/services/userService";
 import gameService from "@/services/gameSercive";
+import { subscribeToPushNotifications } from "@/utils/subscribePushNotifications";
 
 export default {
   components: {},
@@ -137,6 +138,8 @@ export default {
     if (userService.getUser().name) {
       this.reconnectToSocket();
     }
+
+    this.requestNotificationPermission();
   },
 
   methods: {
@@ -442,6 +445,15 @@ export default {
       // Cap the progress at 100% once all uploads are done
       if (this.serverUploadProgress >= 100) {
         this.serverUploadProgress = 100;
+      }
+    },
+
+    async requestNotificationPermission() {
+      const permission = await Notification.requestPermission();
+      if (permission === "granted") {
+        await subscribeToPushNotifications();
+      } else {
+        alert("Push notifications permission denied.");
       }
     },
   },
