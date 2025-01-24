@@ -52,8 +52,7 @@ a,
     top: 0; /* End at the original position */
     opacity: 1; /* Fully visible */
 
-    -webkit-filter: drop-shadow(5px 7px 7px #515151);
-    filter: drop-shadow(5px 7px 7px #515151);
+    -box-shadow: 5px 7px 7px #515151;
     // filter: drop-shadow(5px 6px 11px #515151);
   }
 }
