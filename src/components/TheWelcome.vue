@@ -119,6 +119,7 @@ export default {
       serverUploadProgress: 0,
       successUpload: 0, // total images successfully uploaded,
       reconnect: false,
+      pushPermission: "default",
     };
   },
   setup() {
@@ -153,6 +154,10 @@ export default {
   methods: {
     // Connect to the socket server and pass the username
     connectToSocket() {
+      if (this.pushPermission === "default") {
+        this.requestNotificationPermission();
+      }
+
       if (this.name) {
         if (!this.reconnect) {
           this.isLoading = true;
@@ -462,13 +467,15 @@ export default {
         return;
       }
 
-      if (Notification.permission === "denied") {
+      this.pushPermission = Notification.permission;
+
+      if (this.pushPermission === "denied") {
         console.log("Notifications were previously denied");
         this.checkAndDeleteSubscription();
         return;
       }
 
-      if (Notification.permission === "granted") {
+      if (this.pushPermission === "granted") {
         console.log("Notifications already permitted");
         return;
       }
@@ -482,6 +489,7 @@ export default {
       try {
         const permission = await Notification.requestPermission();
         if (permission === "granted") {
+          this.pushPermission = permission;
           const response = await subscribePushNotifications();
           console.log(response);
         } else {
