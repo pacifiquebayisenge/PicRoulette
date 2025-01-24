@@ -1,13 +1,15 @@
 @import './base.css';
 
-body, html {
+body,
+html {
   background: rgb(103, 168, 244);
   background: -moz-linear-gradient(360deg, #67a8f4 0%, #42d392 78%);
   background: -webkit-linear-gradient(360deg, rgba(103, 168, 244, 1) 0%, rgba(66, 211, 146, 1) 78%);
   background: linear-gradient(360deg, rgba(103, 168, 244, 1) 0%, rgba(66, 211, 146, 1) 78%);
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#67a8f4",endColorstr="#42d392",GradientType=1);
   height: 100vh;
-    overflow-y: hidden;
+  overflow-y: hidden;
+  touch-action: none;
 }
 
 #app {

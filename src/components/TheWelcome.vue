@@ -484,6 +484,8 @@ export default {
         if (permission === "granted") {
           const response = await subscribePushNotifications();
           console.log(response);
+        } else {
+          console.log("not granted");
         }
       } catch (error) {
         console.error("Error:", error);
