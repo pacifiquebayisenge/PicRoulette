@@ -5,7 +5,10 @@
 
       <div class="score-results">
         <div class="user-tag" v-for="(user, index) in userList" :key="index">
-          {{ `${index + 1}. ${user.emoji} ${user.name} ` }}
+          {{ `${index + 1}. ${user.emoji}` }}
+          <n-ellipsis style="max-width: auto">
+            {{ user.name }}
+          </n-ellipsis>
           <n-tag
             :bordered="false"
             :color="
@@ -89,7 +92,7 @@ export default {
   align-items: center;
   justify-content: space-evenly;
   padding: 20px;
-  min-height: 90vh;
+  max-height: 60vh;
   overflow: hidden;
 
   .page-title {
@@ -101,7 +104,7 @@ export default {
     max-height: 35rem;
     overflow: hidden;
     overflow-y: scroll;
-    padding: 3rem;
+    margin: 3rem;
 
     scrollbar-width: none;
 
@@ -113,20 +116,23 @@ export default {
 
     div.user-tag {
       font-weight: bold;
-      display: flex;
+
       gap: 1rem;
       margin-bottom: 1rem;
       justify-content: center;
       align-items: center;
       font-size: 1.8rem;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+
+      .n-ellipsis span,
+      div.n-tag span {
+        font-weight: bold;
+      }
 
       div.n-tag {
         padding: 0.5rem 2rem;
         height: fit-content;
-
-        span {
-          font-weight: bold;
-        }
       }
     }
   }

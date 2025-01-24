@@ -232,8 +232,12 @@ export default {
         }
       }
 
-      .n-ellipsis span {
-        font-weight: bold;
+      .n-ellipsis {
+        line-height: 2rem;
+
+        span {
+          font-weight: bold;
+        }
       }
     }
   }
@@ -243,7 +247,7 @@ export default {
 @media (max-width: 76.8rem) {
   // Converted from 768px
   .game-page {
-    gap: 1rem;
+    gap: 1.5rem;
 
     .voting-btns {
       gap: 0.75rem;
