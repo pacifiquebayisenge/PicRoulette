@@ -57,7 +57,7 @@ self.addEventListener('push', (event) => {
 
   // Define notification options
   const options = {
-    body:  notification.body.replace(' from picroulette', ''),
+    body:  notification.body.replace('from PicRoulette', ''),
     icon: '/pwa-192x192.png', // Path to your app icon
     badge: '/pwa-192x192.png', // Path to your app badge
     vibrate: [100, 50, 100], // Vibration pattern
