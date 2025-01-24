@@ -154,10 +154,6 @@ export default {
   methods: {
     // Connect to the socket server and pass the username
     connectToSocket() {
-      if (this.pushPermission === "default" || this.pushPermission === "not granted") {
-        this.requestNotificationPermission();
-      }
-
       if (this.name) {
         if (!this.reconnect) {
           this.isLoading = true;
@@ -229,6 +225,8 @@ export default {
           console.log("Disconnected from server");
         });
       }
+
+      this.checkNotificationPermission();
     },
 
     reconnectToSocket() {
