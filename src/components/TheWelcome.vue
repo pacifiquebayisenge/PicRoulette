@@ -717,7 +717,9 @@ h1 {
       max-height: 20rem;
       padding: 1rem;
 
-      box-shadow: 5px 7px 7px #515151;
+      -webkit-filter: drop-shadow(5px 7px 7px #515151);
+      filter: drop-shadow(5px 7px 7px #515151);
+      transform: translateZ(0);
 
       &::-webkit-scrollbar {
         display: none;
