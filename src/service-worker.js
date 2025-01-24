@@ -42,6 +42,7 @@ self.addEventListener('push', (event) => {
     return;
   }
 
+  console.log(event)
   // Try to parse the data as JSON first
   let notification;
   try {
@@ -56,7 +57,7 @@ self.addEventListener('push', (event) => {
 
   // Define notification options
   const options = {
-    body: notification.body,
+    body:  notification.body.replace(' from picroulette', ''),
     icon: '/pwa-192x192.png', // Path to your app icon
     badge: '/pwa-192x192.png', // Path to your app badge
     vibrate: [100, 50, 100], // Vibration pattern
@@ -73,7 +74,10 @@ self.addEventListener('push', (event) => {
 
   // Show the notification with the specified title
   event.waitUntil(
-    self.registration.showNotification(notification.title || 'Pic Roulette', options) // Ensure title is set here
+    self.registration.showNotification('Pic Roulette', {
+      ...options,
+      body: notification.body // Keep original body
+    })
   );
 });
 
