@@ -486,6 +486,11 @@ export default {
     },
 
     async requestNotificationPermission() {
+      if (!("Notification" in window)) {
+        console.log("This browser does not support notifications");
+        return;
+      }
+
       try {
         const permission = await Notification.requestPermission();
         if (permission === "granted") {
@@ -714,8 +719,7 @@ h1 {
       max-height: 20rem;
       padding: 1rem;
 
-      -webkit-filter: drop-shadow(5px 7px 7px #515151);
-      filter: drop-shadow(5px 7px 7px #515151);
+      box-shadow: 5px 7px 7px #515151;
 
       &::-webkit-scrollbar {
         display: none;
