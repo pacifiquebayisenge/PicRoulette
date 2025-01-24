@@ -74,7 +74,7 @@ self.addEventListener('push', (event) => {
 
   // Show the notification with the specified title
   event.waitUntil(
-    self.registration.showNotification('Pic Roulette', {
+    self.registration.showNotification(notification.title || 'Pic Roulette', {
       ...options,
       body: notification.body // Keep original body
     })
