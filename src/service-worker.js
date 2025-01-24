@@ -43,6 +43,7 @@ self.addEventListener('push', (event) => {
   }
 
   console.log(event)
+  console.log(event.data.json())
   // Try to parse the data as JSON first
   let notification;
   try {
@@ -57,7 +58,7 @@ self.addEventListener('push', (event) => {
 
   // Define notification options
   const options = {
-    body:  notification.body.replace('from PicRoulette', ''),
+    body:  notification.body,
     icon: '/pwa-192x192.png', // Path to your app icon
     badge: '/pwa-192x192.png', // Path to your app badge
     vibrate: [100, 50, 100], // Vibration pattern
@@ -69,8 +70,7 @@ self.addEventListener('push', (event) => {
     actions: notification.actions || []
   };
 
-  // Log options for debugging
-  console.log(options);
+  
 
   // Show the notification with the specified title
   event.waitUntil(

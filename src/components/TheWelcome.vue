@@ -96,8 +96,8 @@ import socketService from "@/services/socketService";
 import userService from "@/services/userService";
 import gameService from "@/services/gameSercive";
 import {
-  subscribePushNotifications,
-  unsubscribePushNotifications,
+  subscribeToPushNotifications,
+  unsubscribeOfPushNotifications,
 } from "@/utils/subscribePushNotifications";
 
 export default {
@@ -154,7 +154,7 @@ export default {
   methods: {
     // Connect to the socket server and pass the username
     connectToSocket() {
-      if (this.pushPermission === "default") {
+      if (this.pushPermission === "default" || this.pushPermission === "not granted") {
         this.requestNotificationPermission();
       }
 
@@ -490,7 +490,7 @@ export default {
         const permission = await Notification.requestPermission();
         if (permission === "granted") {
           this.pushPermission = permission;
-          const response = await subscribePushNotifications();
+          const response = await subscribeToPushNotifications();
           console.log(response);
         } else {
           console.log("not granted");
@@ -520,7 +520,7 @@ export default {
 
             // Unsubscribe and delete the subscription
             await subscription.unsubscribe();
-            const response = await unsubscribePushNotifications(subscription);
+            const response = await unsubscribeOfPushNotifications(subscription);
 
             console.log(response);
           } else {
