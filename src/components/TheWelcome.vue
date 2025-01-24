@@ -1,24 +1,5 @@
 <template>
   <div class="home-component">
-    <div>
-      <n-button
-        v-if="notificationPermission === 'default'"
-        @click="requestNotificationPermission"
-      >
-        Enable Notifications
-      </n-button>
-
-      <n-button
-        v-else-if="notificationPermission === 'denied'"
-        @click="showPermissionInstructions"
-        type="warning"
-      >
-        Enable Notifications in Settings
-      </n-button>
-
-      <n-button v-else disabled type="success"> Notifications Enabled </n-button>
-    </div>
-
     <n-card>
       <div class="home-component">
         <header>
@@ -114,7 +95,10 @@ import { MAX_IMAGE_UPLOAD } from "@/constants";
 import socketService from "@/services/socketService";
 import userService from "@/services/userService";
 import gameService from "@/services/gameSercive";
-import { subscribeToPushNotifications } from "@/utils/subscribePushNotifications";
+import {
+  subscribePushNotifications,
+  unsubscribePushNotifications,
+} from "@/utils/subscribePushNotifications";
 
 export default {
   components: {},
@@ -480,6 +464,7 @@ export default {
 
       if (Notification.permission === "denied") {
         console.log("Notifications were previously denied");
+        this.checkAndDeleteSubscription();
         return;
       }
 
@@ -489,29 +474,16 @@ export default {
       }
 
       console.log("Notification permission not decided yet");
+
+      this.requestNotificationPermission();
     },
 
     async requestNotificationPermission() {
-      if (!("Notification" in window)) {
-        this.$dialog.warning({
-          title: "Notifications Not Supported",
-          content: "Your browser does not support notifications.",
-          positiveText: "OK",
-        });
-        return;
-      }
-
       try {
         const permission = await Notification.requestPermission();
         if (permission === "granted") {
-          await subscribeToPushNotifications();
-        } else {
-          this.$dialog.warning({
-            title: "Notifications Disabled",
-            content:
-              "You will not receive push notifications. You can enable them in your browser settings if you change your mind.",
-            positiveText: "OK",
-          });
+          const response = await subscribePushNotifications();
+          console.log(response);
         }
       } catch (error) {
         console.error("Error:", error);
@@ -519,13 +491,37 @@ export default {
       }
     },
 
-    showPermissionInstructions() {
-      this.$dialog.info({
-        title: "Enable Notifications",
-        content:
-          'To enable notifications:\n1. Click the lock icon in your browser\'s address bar\n2. Find "Notifications" in the permissions list\n3. Change the setting to "Allow"',
-        positiveText: "OK",
-      });
+    // Check if the service worker has a push subscription
+    async checkAndDeleteSubscription() {
+      try {
+        // Ensure the service worker is available
+        if ("serviceWorker" in navigator && "PushManager" in window) {
+          const registration = await navigator.serviceWorker.getRegistration();
+          if (!registration) {
+            console.log("Service worker not registered.");
+            return;
+          }
+
+          const subscription = await registration.pushManager.getSubscription();
+
+          // Check if there is an existing subscription
+          if (subscription) {
+            console.log("Existing subscription found, deleting...");
+
+            // Unsubscribe and delete the subscription
+            await subscription.unsubscribe();
+            const response = await unsubscribePushNotifications(subscription);
+
+            console.log(response);
+          } else {
+            console.log("No existing subscription found.");
+          }
+        } else {
+          console.log("Service Worker or PushManager is not supported.");
+        }
+      } catch (error) {
+        console.error("Error while checking and deleting subscription:", error);
+      }
     },
   },
 

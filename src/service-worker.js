@@ -49,16 +49,17 @@ self.addEventListener('push', (event) => {
   } catch (e) {
     // If JSON parsing fails, use text
     notification = {
-      title: 'New Notification',
+      title: 'Pic Roulette', // Default to 'pic roulette' title
       body: event.data.text(),
     };
   }
 
+  // Define notification options
   const options = {
     body: notification.body,
-    icon: '/pwa-192x192.png', // Update this path to match your icon
-    badge: '/pwa-192x192.png', // Update this path to match your badge
-    vibrate: [100, 50, 100],
+    icon: '/pwa-192x192.png', // Path to your app icon
+    badge: '/pwa-192x192.png', // Path to your app badge
+    vibrate: [100, 50, 100], // Vibration pattern
     data: {
       dateOfArrival: Date.now(),
       primaryKey: 1,
@@ -67,12 +68,15 @@ self.addEventListener('push', (event) => {
     actions: notification.actions || []
   };
 
-  console.log(options)
+  // Log options for debugging
+  console.log(options);
 
+  // Show the notification with the specified title
   event.waitUntil(
-    self.registration.showNotification(notification.title || 'New Notification', options)
+    self.registration.showNotification(notification.title || 'Pic Roulette', options) // Ensure title is set here
   );
 });
+
 
 // Add notification click event listener
 self.addEventListener('notificationclick', (event) => {

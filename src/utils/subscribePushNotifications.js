@@ -5,7 +5,7 @@ export function urlBase64ToUint8Array(base64String) {
   return Uint8Array.from([...rawData].map((char) => char.charCodeAt(0)));
 }
 
-export async function subscribeToPushNotifications() {
+export async function subscribePushNotifications() {
   if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
     console.warn('Push notifications are not supported by your browser.');
     return;
@@ -19,7 +19,7 @@ export async function subscribeToPushNotifications() {
       applicationServerKey: urlBase64ToUint8Array(import.meta.env.VITE_PUBLIC_VAPID_KEY),
     });
 
-    console.log('Push Subscription:', subscription);
+    // console.log('Push Subscription:', subscription);
 
     const response = await fetch(`${import.meta.env.VITE_PUSH_SERVER_URL}/api/subscribe`, {
       method: 'POST',
@@ -29,14 +29,48 @@ export async function subscribeToPushNotifications() {
       body: JSON.stringify(subscription),
     });
 
-    console.log('Response from server:', response);  
+    // console.log('Response from server:', response);  
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     const data = await response.json();
-    console.log('Subscription successful:', data);
+    // console.log('Subscription successful:', data);
+    localStorage.setItem('push_subscription', JSON.stringify(data.subscription));
+    return data
+  } catch (error) {
+    console.error('Error subscribing to push notifications:', error);
+    throw error; // Re-throw to handle it in the component
+  }
+}
+
+export async function unsubscribePushNotifications(subscription) {
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+    console.warn('Push notifications are not supported by your browser.');
+    return;
+  }
+
+  try {
+    // console.log('Push Subscription:', subscription);
+
+    const response = await fetch(`${import.meta.env.VITE_PUSH_SERVER_URL}/api/unsubscribe`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(subscription),
+    });
+
+    // console.log('Response from server:', response);  
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    // console.log('Subscription successful:', data);
+    return data
   } catch (error) {
     console.error('Error subscribing to push notifications:', error);
     throw error; // Re-throw to handle it in the component
