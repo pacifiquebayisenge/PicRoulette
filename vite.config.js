@@ -30,7 +30,7 @@ export default defineConfig({
       },
       manifest: {
         name: 'Pic Roulette',
-        short_name: 'PicRoulette',
+        short_name: 'Pic Roulette',
         description: 'Picture geussing game',
         permissions: ["push", "notifications"],
         theme_color: '#42d392',
