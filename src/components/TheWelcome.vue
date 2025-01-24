@@ -96,8 +96,8 @@ import socketService from "@/services/socketService";
 import userService from "@/services/userService";
 import gameService from "@/services/gameSercive";
 import {
-  subscribePushNotifications,
-  unsubscribePushNotifications,
+  subscribeToPushNotifications,
+  unsubscribeOfPushNotifications,
 } from "@/utils/subscribePushNotifications";
 
 export default {
@@ -119,6 +119,7 @@ export default {
       serverUploadProgress: 0,
       successUpload: 0, // total images successfully uploaded,
       reconnect: false,
+      pushPermission: "default",
     };
   },
   setup() {
@@ -153,6 +154,10 @@ export default {
   methods: {
     // Connect to the socket server and pass the username
     connectToSocket() {
+      if (this.pushPermission === "default" || this.pushPermission === "not granted") {
+        this.requestNotificationPermission();
+      }
+
       if (this.name) {
         if (!this.reconnect) {
           this.isLoading = true;
@@ -462,13 +467,15 @@ export default {
         return;
       }
 
-      if (Notification.permission === "denied") {
+      this.pushPermission = Notification.permission;
+
+      if (this.pushPermission === "denied") {
         console.log("Notifications were previously denied");
         this.checkAndDeleteSubscription();
         return;
       }
 
-      if (Notification.permission === "granted") {
+      if (this.pushPermission === "granted") {
         console.log("Notifications already permitted");
         return;
       }
@@ -482,7 +489,8 @@ export default {
       try {
         const permission = await Notification.requestPermission();
         if (permission === "granted") {
-          const response = await subscribePushNotifications();
+          this.pushPermission = permission;
+          const response = await subscribeToPushNotifications();
           console.log(response);
         } else {
           console.log("not granted");
@@ -512,7 +520,7 @@ export default {
 
             // Unsubscribe and delete the subscription
             await subscription.unsubscribe();
-            const response = await unsubscribePushNotifications(subscription);
+            const response = await unsubscribeOfPushNotifications(subscription);
 
             console.log(response);
           } else {

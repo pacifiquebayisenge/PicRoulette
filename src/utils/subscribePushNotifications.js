@@ -5,7 +5,7 @@ export function urlBase64ToUint8Array(base64String) {
   return Uint8Array.from([...rawData].map((char) => char.charCodeAt(0)));
 }
 
-export async function subscribePushNotifications() {
+export async function subscribeToPushNotifications() {
   if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
     console.warn('Push notifications are not supported by your browser.');
     return;
@@ -45,7 +45,7 @@ export async function subscribePushNotifications() {
   }
 }
 
-export async function unsubscribePushNotifications(subscription) {
+export async function unsubscribeOfPushNotifications(subscription) {
   if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
     console.warn('Push notifications are not supported by your browser.');
     return;
