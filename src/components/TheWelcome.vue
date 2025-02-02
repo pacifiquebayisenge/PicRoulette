@@ -34,7 +34,7 @@
             @change="handleImageUpload"
             accept="image/*"
           >
-            <n-button :bordered="false">Upload</n-button>
+            <n-button class="button-3D" :bordered="false">Upload</n-button>
           </n-upload>
         </div>
 

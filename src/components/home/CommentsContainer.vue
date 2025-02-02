@@ -12,7 +12,7 @@
         maxRows: 3,
       }"
     />
-    <n-button>Send Comment</n-button>
+    <n-button class="button-3D">Send Comment</n-button>
 
     <!-- Display comments -->
     <div class="chat-container" ref="chatContainer">
