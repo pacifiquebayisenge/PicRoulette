@@ -1,94 +1,60 @@
 <template>
-  <div class="home-component">
-    <n-card>
-      <div v-if="!showOptions" class="connect-container">
-        <header>
-          <h1>Pic Roulette</h1>
-        </header>
+  <n-card>
+    <div class="home-component">
+      <header>
+        <h1>Pic Roulette</h1>
+      </header>
 
-        <!-- Ask for the user's name if not yet set -->
-        <div v-if="!user" class="name-container">
-          <n-input
-            v-model:value="name"
-            type="text"
-            size="large"
-            :maxlength="15"
-            :placeholder="getPlaceholder || 'Enter your name'"
-          />
-          <n-button class="button-3D" :bordered="false" @click="connectToSocket"
-            >Connect</n-button
-          >
-          <n-button class="button-3D" :bordered="false" @click="handleBack"
-            >Options</n-button
-          >
-        </div>
-
-        <!-- <CommentsContainer /> -->
-
-        <div v-if="user" class="images-container">
-          <n-upload
-            :disabled="successUpload >= 15"
-            :min="5"
-            :multiple="true"
-            :show-file-list="false"
-            @change="handleImageUpload"
-            accept="image/*"
-          >
-            <n-button class="button-3D" :bordered="false">Upload</n-button>
-          </n-upload>
-        </div>
-
-        <div v-if="user" class="progress-container">
-          <div v-if="processLabel && !serverUploadProgress">🍲 Cooking the images 🍳</div>
-          <n-progress
-            v-if="processLabel && !serverUploadProgress"
-            type="line"
-            :percentage="webUploadProgress"
-            color="#67a8f3"
-            :show-indicator="false"
-            processing
-          />
-          <n-progress
-            v-if="serverUploadProgress"
-            type="line"
-            color="#36ad6a"
-            :percentage="serverUploadProgress"
-            indicator-placement="inside"
-            processing
-          />
-          <div>Images Uploaded {{ successUpload }}</div>
-        </div>
+      <!-- Ask for the user's name if not yet set -->
+      <div v-if="!user" class="container">
+        <n-input
+          v-model:value="name"
+          type="text"
+          size="large"
+          :maxlength="15"
+          :placeholder="getPlaceholder || 'Enter your name'"
+        />
+        <n-button :bordered="false" @click="connectToSocket">Connect</n-button>
+        <n-button :bordered="false" @click="connectToSocket">Options</n-button>
       </div>
 
-      <OptionsContainer v-if="showOptions" @back-clicked="handleBack" />
-    </n-card>
+      <!-- <CommentsContainer /> -->
 
-    <!-- Display active users count and names -->
-    <div v-if="activeUsers.length" class="active-users-container">
-      <h2>Active Users ({{ activeUsers.length }}):</h2>
+      <div v-if="user" class="images-container">
+        <n-upload
+          :disabled="successUpload >= 15"
+          :min="5"
+          :multiple="true"
+          :show-file-list="false"
+          @change="handleImageUpload"
+          accept="image/*"
+        >
+          <n-button :bordered="false">Upload</n-button>
+        </n-upload>
+      </div>
 
-      <div>
-        <div v-for="(user, index) in activeUsers" :key="index" class="user-component">
-          <div>{{ user.emoji }}</div>
-
-          <div>
-            <n-ellipsis style="max-width: 12rem">
-              {{ user.name }}
-            </n-ellipsis>
-          </div>
-
-          <n-tag
-            class="state-tag"
-            :bordered="false"
-            round
-            :type="user.state === 'Ready' ? 'success' : 'warning'"
-          >
-            {{ user.state }}
-          </n-tag>
-        </div>
+      <div v-if="user" class="progress-container">
+        <div v-if="processLabel && !serverUploadProgress">🍲 Cooking the images 🍳</div>
+        <n-progress
+          v-if="processLabel && !serverUploadProgress"
+          type="line"
+          :percentage="webUploadProgress"
+          color="#67a8f3"
+          :show-indicator="false"
+          processing
+        />
+        <n-progress
+          v-if="serverUploadProgress"
+          type="line"
+          color="#36ad6a"
+          :percentage="serverUploadProgress"
+          indicator-placement="inside"
+          processing
+        />
+        <div>Images Uploaded {{ successUpload }}</div>
       </div>
     </div>
-  </div>
+  </n-card>
 </template>
 
 <script>
@@ -106,13 +72,17 @@ import {
   subscribeToPushNotifications,
   unsubscribeOfPushNotifications,
 } from "@/utils/subscribePushNotifications";
-import OptionsContainer from "./home/OptionsContainer.vue";
 
 export default {
-  components: { OptionsContainer },
+  components: {},
+  props: {
+    socket: {
+      require: true,
+      default: null,
+    },
+  },
   data() {
     return {
-      socket: null,
       name: "",
       comment: "",
       comments: [],
@@ -128,7 +98,6 @@ export default {
       successUpload: 0, // total images successfully uploaded,
       reconnect: false,
       pushPermission: "default",
-      showOptions: false,
     };
   },
   setup() {
@@ -151,7 +120,6 @@ export default {
       return window.Notification?.permission || "default";
     },
   },
-
   mounted() {
     if (userService.getUser().name) {
       this.reconnectToSocket();
@@ -509,7 +477,8 @@ export default {
           console.log("not granted");
         }
       } catch (error) {
-        console.log("Error:", error);
+        console.error("Error:", error);
+        this.showError(error);
       }
     },
 
@@ -542,12 +511,8 @@ export default {
           console.log("Service Worker or PushManager is not supported.");
         }
       } catch (error) {
-        console.log("Error while checking and deleting subscription:", error);
+        console.error("Error while checking and deleting subscription:", error);
       }
-    },
-
-    handleBack() {
-      this.showOptions = !this.showOptions;
     },
   },
 
@@ -561,61 +526,101 @@ export default {
 </script>
 
 <style lang="scss">
+.progress-container {
+  margin: 1rem 0;
+}
+
+.progress-bar {
+  width: 100%;
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  height: 1rem;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #4caf50;
+  transition: width 0.3s ease;
+}
+
+h1 {
+  font-weight: 400;
+  font-family: "Rammetto One", sans-serif;
+  background: rgb(103, 168, 244);
+  background: -moz-linear-gradient(
+    270deg,
+    rgba(103, 168, 244, 1) 0%,
+    rgba(66, 211, 146, 1) 78%
+  );
+  background: -webkit-linear-gradient(
+    270deg,
+    rgba(103, 168, 244, 1) 0%,
+    rgba(66, 211, 146, 1) 78%
+  );
+  background: linear-gradient(
+    270deg,
+    rgba(103, 168, 244, 1) 0%,
+    rgba(66, 211, 146, 1) 78%
+  );
+
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#67a8f4", endColorstr="#42d392", GradientType=1);
+
+  /* Text-specific properties */
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* Hides the actual color and shows only the gradient */
+}
+
 .home-component {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 
-  .connect-container {
+  .container {
     display: flex;
-    justify-content: center;
-    align-items: center;
     flex-direction: column;
+    align-items: center;
+    margin: 1rem;
+    gap: 2rem;
+    width: 80%;
+  }
 
-    .name-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin: 1rem;
-      gap: 2rem;
-      width: 80%;
+  button span {
+    font-weight: bolder;
+  }
+
+  button {
+    position: relative;
+    padding: 0.75rem 1.5rem;
+    background: #ffffff;
+    border: 0.2rem solid #b9baba;
+    border-radius: 0.8rem;
+    transform: translateY(-0.4rem);
+    transition: all 0.1s ease;
+    box-shadow: 0 0.4rem 0 #b9baba, 0 0.4rem 0.6rem rgba(0, 0, 0, 0.1);
+    &:hover {
+      background: #ffffff; /* Force white background on hover */
+      transform: translateY(-0.5rem);
+      box-shadow: 0 0.5rem 0 #b9baba, 0 0.5rem 0.6rem rgba(0, 0, 0, 0.1);
     }
 
-    button span {
+    &:active {
+      background: #ffffff; /* Force white background on active */
+      transform: translateY(0);
+      box-shadow: 0 0 0 #b9baba, 0 0 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .n-button__content {
       font-weight: bolder;
     }
 
-    // button {
-    //   position: relative;
-    //   padding: 0.75rem 1.5rem;
-    //   background: #ffffff;
-    //   border: 0.2rem solid #b9baba;
-    //   border-radius: 0.8rem;
-    //   transform: translateY(-0.4rem);
-    //   transition: all 0.1s ease;
-    //   box-shadow: 0 0.4rem 0 #b9baba, 0 0.4rem 0.6rem rgba(0, 0, 0, 0.1);
-    //   &:hover {
-    //     background: #ffffff; /* Force white background on hover */
-    //     transform: translateY(-0.5rem);
-    //     box-shadow: 0 0.5rem 0 #b9baba, 0 0.5rem 0.6rem rgba(0, 0, 0, 0.1);
-    //   }
-
-    //   &:active {
-    //     background: #ffffff; /* Force white background on active */
-    //     transform: translateY(0);
-    //     box-shadow: 0 0 0 #b9baba, 0 0 0 rgba(0, 0, 0, 0.1);
-    //   }
-
-    //   .n-button__content {
-    //     font-weight: bolder;
-    //   }
-
-    //   &.n-button:not(.n-button--disabled):focus,
-    //   &.n-button:not(.n-button--disabled):hover {
-    //     background-color: white;
-    //   }
-    // }
+    &.n-button:not(.n-button--disabled):focus,
+    &.n-button:not(.n-button--disabled):hover {
+      background-color: white;
+    }
   }
 
   .chat-container {
@@ -743,5 +748,9 @@ export default {
       }
     }
   }
+}
+
+img {
+  width: 50rem;
 }
 </style>
