@@ -99,7 +99,20 @@ a,
 
 h1 {
   font-size: 3rem;
-  font-weight: bold;
+  font-weight: 400;
+  font-family: 'Rammetto One', sans-serif;
+  background: rgb(103, 168, 244);
+  background: -moz-linear-gradient(270deg, rgba(103, 168, 244, 1) 0%, rgba(66, 211, 146, 1) 78%);
+  background: -webkit-linear-gradient(270deg, rgba(103, 168, 244, 1) 0%, rgba(66, 211, 146, 1) 78%);
+  background: linear-gradient(270deg, rgba(103, 168, 244, 1) 0%, rgba(66, 211, 146, 1) 78%);
+
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#67a8f4", endColorstr="#42d392", GradientType=1);
+
+  /* Text-specific properties */
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* Hides the actual color and shows only the gradient */
 }
 
 main {
@@ -107,6 +120,109 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.button-3D {
+  position: relative;
+  padding: 0.75rem 1.5rem;
+  background: #ffffff;
+  border: 0.2rem solid #b9baba;
+  border-radius: 0.8rem;
+  transform: translateY(-0.4rem);
+  transition: all 0.1s ease;
+  box-shadow:
+    0 0.4rem 0 #b9baba,
+    0 0.4rem 0.6rem rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    background: #ffffff; /* Force white background on hover */
+    transform: translateY(-0.5rem);
+    box-shadow:
+      0 0.5rem 0 #b9baba,
+      0 0.5rem 0.6rem rgba(0, 0, 0, 0.1);
+  }
+
+  &:active {
+    background: #ffffff; /* Force white background on active */
+    transform: translateY(0);
+    box-shadow:
+      0 0 0 #b9baba,
+      0 0 0 rgba(0, 0, 0, 0.1);
+  }
+
+  &,
+  &:active,
+  &:focus {
+    .n-button__border,
+    .n-button__state-border {
+      border: none !important;
+    }
+  }
+
+  .n-button__content {
+    font-weight: bolder;
+  }
+
+  &.n-button:not(.n-button--disabled):not(.button-3D-colorfull):focus,
+  &.n-button:not(.n-button--disabled):not(.button-3D-colorfull):hover {
+    background-color: white;
+  }
+
+  &-colorfull {
+    // Success state with lighter green
+    &.n-button--success-type {
+      background: #cceada;
+      border-color: #aad3bb;
+      color: #2c7a4d; // Darker text for contrast
+      box-shadow:
+        0 0.4rem 0 #aad3bb,
+        0 0.4rem 0.6rem rgba(0, 0, 0, 0.1); // Converted from 4px and 6px
+
+      &:hover {
+        box-shadow:
+          0 0.5rem 0 #aad3bb,
+          0 0.5rem 0.6rem rgba(0, 0, 0, 0.1); // Converted from 5px and 6px
+      }
+
+      &:active {
+        box-shadow:
+          0 0 0 #aad3bb,
+          0 0 0 rgba(0, 0, 0, 0.1);
+      }
+
+     
+    }
+
+    // Error state
+    &.n-button--error-type {
+      background: #ffd6d6;
+      border-color: #ffb3b3;
+      color: #d03050;
+      box-shadow:
+        0 0.4rem 0 #ffb3b3,
+        0 0.4rem 0.6rem rgba(0, 0, 0, 0.1); // Converted from 4px and 6px
+
+      &:hover {
+        box-shadow:
+          0 0.5rem 0 #ffb3b3,
+          0 0.5rem 0.6rem rgba(0, 0, 0, 0.1); // Converted from 5px and 6px
+      }
+
+      &:active {
+        box-shadow:
+          0 0 0 #ffb3b3,
+          0 0 0 rgba(0, 0, 0, 0.1);
+      }
+    }
+
+    .n-ellipsis {
+      line-height: 2rem;
+
+      span {
+        font-weight: bold;
+      }
+    }
+  }
 }
 
 @media (hover: hover) {

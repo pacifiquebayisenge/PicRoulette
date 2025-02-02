@@ -1,13 +1,13 @@
 <template>
   <div class="home-component">
     <n-card>
-      <div class="home-component">
+      <div v-if="false" class="connect-container">
         <header>
           <h1>Pic Roulette</h1>
         </header>
 
         <!-- Ask for the user's name if not yet set -->
-        <div v-if="!user" class="container">
+        <div v-if="!user" class="name-container">
           <n-input
             v-model:value="name"
             type="text"
@@ -16,6 +16,7 @@
             :placeholder="getPlaceholder || 'Enter your name'"
           />
           <n-button :bordered="false" @click="connectToSocket">Connect</n-button>
+          <n-button :bordered="false" @click="connectToSocket">Options</n-button>
         </div>
 
         <!-- <CommentsContainer /> -->
@@ -54,6 +55,8 @@
           <div>Images Uploaded {{ successUpload }}</div>
         </div>
       </div>
+
+      <OptionsContainer />
     </n-card>
 
     <!-- Display active users count and names -->
@@ -99,9 +102,10 @@ import {
   subscribeToPushNotifications,
   unsubscribeOfPushNotifications,
 } from "@/utils/subscribePushNotifications";
+import OptionsContainer from "./home/OptionsContainer.vue";
 
 export default {
-  components: {},
+  components: { OptionsContainer },
   data() {
     return {
       socket: null,
@@ -548,96 +552,61 @@ export default {
 </script>
 
 <style lang="scss">
-.progress-container {
-  margin: 1rem 0;
-}
-
-.progress-bar {
-  width: 100%;
-  background-color: #e0e0e0;
-  border-radius: 5px;
-  height: 1rem;
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  background-color: #4caf50;
-  transition: width 0.3s ease;
-}
-
-h1 {
-  font-weight: 400;
-  font-family: "Rammetto One", sans-serif;
-  background: rgb(103, 168, 244);
-  background: -moz-linear-gradient(
-    270deg,
-    rgba(103, 168, 244, 1) 0%,
-    rgba(66, 211, 146, 1) 78%
-  );
-  background: -webkit-linear-gradient(
-    270deg,
-    rgba(103, 168, 244, 1) 0%,
-    rgba(66, 211, 146, 1) 78%
-  );
-  background: linear-gradient(
-    270deg,
-    rgba(103, 168, 244, 1) 0%,
-    rgba(66, 211, 146, 1) 78%
-  );
-
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#67a8f4", endColorstr="#42d392", GradientType=1);
-
-  /* Text-specific properties */
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  /* Hides the actual color and shows only the gradient */
-}
-
 .home-component {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 
-  .container {
+  .connect-container {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    margin: 1rem;
-    gap: 2rem;
-    width: 80%;
-  }
+    flex-direction: column;
 
-  button span {
-    font-weight: bolder;
-  }
-
-  button {
-    position: relative;
-    padding: 0.75rem 1.5rem;
-    background: #ffffff;
-    border: 0.2rem solid #b9baba;
-    border-radius: 0.8rem;
-    transform: translateY(-0.4rem);
-    transition: all 0.1s ease;
-    box-shadow: 0 0.4rem 0 #b9baba, 0 0.4rem 0.6rem rgba(0, 0, 0, 0.1);
-    &:hover {
-      background: #ffffff; /* Force white background on hover */
-      transform: translateY(-0.5rem);
-      box-shadow: 0 0.5rem 0 #b9baba, 0 0.5rem 0.6rem rgba(0, 0, 0, 0.1);
+    .name-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 1rem;
+      gap: 2rem;
+      width: 80%;
     }
 
-    &:active {
-      background: #ffffff; /* Force white background on active */
-      transform: translateY(0);
-      box-shadow: 0 0 0 #b9baba, 0 0 0 rgba(0, 0, 0, 0.1);
-    }
-
-    .n-button__content {
+    button span {
       font-weight: bolder;
     }
+
+    // button {
+    //   position: relative;
+    //   padding: 0.75rem 1.5rem;
+    //   background: #ffffff;
+    //   border: 0.2rem solid #b9baba;
+    //   border-radius: 0.8rem;
+    //   transform: translateY(-0.4rem);
+    //   transition: all 0.1s ease;
+    //   box-shadow: 0 0.4rem 0 #b9baba, 0 0.4rem 0.6rem rgba(0, 0, 0, 0.1);
+    //   &:hover {
+    //     background: #ffffff; /* Force white background on hover */
+    //     transform: translateY(-0.5rem);
+    //     box-shadow: 0 0.5rem 0 #b9baba, 0 0.5rem 0.6rem rgba(0, 0, 0, 0.1);
+    //   }
+
+    //   &:active {
+    //     background: #ffffff; /* Force white background on active */
+    //     transform: translateY(0);
+    //     box-shadow: 0 0 0 #b9baba, 0 0 0 rgba(0, 0, 0, 0.1);
+    //   }
+
+    //   .n-button__content {
+    //     font-weight: bolder;
+    //   }
+
+    //   &.n-button:not(.n-button--disabled):focus,
+    //   &.n-button:not(.n-button--disabled):hover {
+    //     background-color: white;
+    //   }
+    // }
   }
 
   .chat-container {
@@ -765,9 +734,5 @@ h1 {
       }
     }
   }
-}
-
-img {
-  width: 50rem;
 }
 </style>

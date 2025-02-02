@@ -1,11 +1,11 @@
 import { createApp } from 'vue'
 import { installPrompt } from './installPrompt'
 
-import { createDiscreteApi } from 'naive-ui'
-import { h } from 'vue'
+// import { createDiscreteApi } from 'naive-ui'
+// import { h } from 'vue'
 
 // Create a discrete API instance for dialogs
-const { dialog } = createDiscreteApi(['dialog'])
+// const { dialog } = createDiscreteApi(['dialog'])
 
 export async function registerServiceWorker() {
   if ('serviceWorker' in navigator) {
@@ -30,71 +30,71 @@ export async function registerServiceWorker() {
 
       installPrompt()
 
-      let deferredPrompt = null
+      // let deferredPrompt = null
 
-      // Utility to detect iOS
-      let isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream
+      // // Utility to detect iOS
+      // let isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream
 
-      window.addEventListener('beforeinstallprompt', (e) => {
-        console.log('beforeinstallprompt fired')
-        e.preventDefault() // Prevent the mini-infobar from appearing on mobile
-        deferredPrompt = e // Store the event for later use
+      // window.addEventListener('beforeinstallprompt', (e) => {
+      //   console.log('beforeinstallprompt fired')
+      //   e.preventDefault() // Prevent the mini-infobar from appearing on mobile
+      //   deferredPrompt = e // Store the event for later use
 
-        // Show the install prompt with a delay
+      //   // Show the install prompt with a delay
 
-        // Display the dialog after 5 seconds
-        setTimeout(() => {
-          if (isIOS()) {
-            // Show a custom dialog for iOS
-            dialog.info({
-              title: 'Install Pic Roulette',
-              content: () => {
-                return h('div', [
-                  h('p', 'Open this app in Safari:'),
-                  h('p', ['Tap the ', h('span', 'Share'), ' button in your browser toolbar.']),
-                  h('p', ['Select ', h('span', 'Add to Home Screen'), ' from the menu.'])
-                ])
-              },
-              positiveText: 'Got it!',
-              bordered: true,
-              class: 'install-dialog-container',
-              showIcon: false,
-              onPositiveClick: () => {
-                console.log('User acknowledged iOS install instructions')
-              }
-            })
-          } else if (deferredPrompt) {
-            // Show the default install dialog
-            dialog.info({
-              title: 'Install Pic Roulette',
-              content: 'Click here to install Pic Roulette on your device',
-              positiveText: 'Install',
-              bordered: true,
-              class: 'install-dialog-container',
-              showIcon: false,
-              onPositiveClick: () => {
-                if (!deferredPrompt) return
+      //   // Display the dialog after 5 seconds
+      //   setTimeout(() => {
+      //     if (isIOS()) {
+      //       // Show a custom dialog for iOS
+      //       dialog.info({
+      //         title: 'Install Pic Roulette',
+      //         content: () => {
+      //           return h('div', [
+      //             h('p', 'Open this app in Safari:'),
+      //             h('p', ['Tap the ', h('span', 'Share'), ' button in your browser toolbar.']),
+      //             h('p', ['Select ', h('span', 'Add to Home Screen'), ' from the menu.'])
+      //           ])
+      //         },
+      //         positiveText: 'Got it!',
+      //         bordered: true,
+      //         class: 'install-dialog-container',
+      //         showIcon: false,
+      //         onPositiveClick: () => {
+      //           console.log('User acknowledged iOS install instructions')
+      //         }
+      //       })
+      //     } else if (deferredPrompt) {
+      //       // Show the default install dialog
+      //       dialog.info({
+      //         title: 'Install Pic Roulette',
+      //         content: 'Click here to install Pic Roulette on your device',
+      //         positiveText: 'Install',
+      //         bordered: true,
+      //         class: 'install-dialog-container',
+      //         showIcon: false,
+      //         onPositiveClick: () => {
+      //           if (!deferredPrompt) return
 
-                // Show the native install prompt
-                deferredPrompt.prompt()
+      //           // Show the native install prompt
+      //           deferredPrompt.prompt()
 
-                deferredPrompt.userChoice.then((choiceResult) => {
-                  console.log(
-                    choiceResult.outcome === 'accepted'
-                      ? 'User accepted the install prompt'
-                      : 'User dismissed the install prompt'
-                  )
-                  deferredPrompt = null // Reset the prompt
-                })
-              }
-            })
-          }
-        }, 3000) // 3-second delay
-      })
+      //           deferredPrompt.userChoice.then((choiceResult) => {
+      //             console.log(
+      //               choiceResult.outcome === 'accepted'
+      //                 ? 'User accepted the install prompt'
+      //                 : 'User dismissed the install prompt'
+      //             )
+      //             deferredPrompt = null // Reset the prompt
+      //           })
+      //         }
+      //       })
+      //     }
+      //   }, 3000) // 3-second delay
+      // })
 
-      window.addEventListener('appinstalled', (event) => {
-        console.log('App installed', event)
-      })
+      // window.addEventListener('appinstalled', (event) => {
+      //   console.log('App installed', event)
+      // })
 
       // Immediately check for updates
       console.log('Checking for updates...')
