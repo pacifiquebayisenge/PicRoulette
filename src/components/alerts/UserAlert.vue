@@ -1,8 +1,10 @@
+// TODO : Rename this component
+
 <template>
   <n-space vertical :size="12">
     <n-alert
       class="alert"
-      :title="user ? `${user.emoji} ${user.name}` : 'Error'"
+      :title="user ? `${user.emoji} ${user.name}` : title ? title : 'Error'"
       :show-icon="false"
       :type="alertType"
     >
@@ -11,6 +13,12 @@
       </div>
       <div v-if="user && alertType == 'error'" class="alert-content">left the room</div>
       <div v-if="alertType == 'error'" class="alert-content">{{ message }}</div>
+      <div
+        v-if="alertType == 'success' && title == 'Notifications'"
+        class="alert-content"
+      >
+        {{ message }}
+      </div>
     </n-alert>
   </n-space>
 </template>
@@ -31,6 +39,10 @@ export default {
         // The value must be 'success' or 'error'
         return ["success", "error"].includes(value);
       },
+    },
+    title: {
+      type: String,
+      default: "",
     },
     message: {
       type: String,
