@@ -5,6 +5,8 @@ import vue from '@vitejs/plugin-vue'
 
 import { VitePWA } from 'vite-plugin-pwa'
 
+import { version } from './package.json';
+
 // https://vitejs.dev/config/
 export default defineConfig({
   base: '/', 
@@ -47,8 +49,12 @@ export default defineConfig({
           }
         ]
       }
-    })
+    }),
+    
   ],
+  define: {
+    __APP_VERSION__: JSON.stringify(version)
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))

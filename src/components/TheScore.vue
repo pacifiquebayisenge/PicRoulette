@@ -26,7 +26,9 @@
         </div>
       </div>
 
-      <n-button :bordered="false" @click="restart"> Restart Game </n-button>
+      <n-button class="button-3D" :bordered="false" @click="restart">
+        Restart Game
+      </n-button>
     </div>
   </n-card>
 </template>

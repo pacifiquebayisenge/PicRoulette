@@ -12,12 +12,11 @@ function isIOS() {
 }
 
 function showInstallPrompt() {
- 
-  
   
   // Display the dialog after 5 seconds
   setTimeout(() => {
     if (isIOS()) {
+      console.log('LAUNCH IOS PROMPT ?')
       // Show a custom dialog for iOS
       dialog.info({
         title: 'Install Pic Roulette',

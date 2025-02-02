@@ -18,6 +18,7 @@
 
     <div class="voting-btns">
       <n-button
+        class="button-3D-colorfull"
         v-for="(user, index) in userList"
         :key="index"
         secondary
@@ -31,7 +32,6 @@
             : 'default'
         "
         @click="sendResponse(user.id)"
-        class="send-response-btn"
       >
         <n-ellipsis style="max-width: 10rem">
           {{ `${user.emoji} ${user.name}` }}
@@ -178,68 +178,68 @@ export default {
       display: none; // Hide scrollbar in webkit-based browsers
     }
 
-    .send-response-btn {
-      position: relative;
-      padding: 0.75rem 1.5rem;
-      background: #ffffff;
-      border: 0.2rem solid #b9baba; // Converted from 2px
-      border-radius: 0.8rem; // Converted from 8px
-      transform: translateY(-0.4rem); // Converted from -4px
-      transition: all 0.1s ease;
+    // .send-response-btn {
+    //   position: relative;
+    //   padding: 0.75rem 1.5rem;
+    //   background: #ffffff;
+    //   border: 0.2rem solid #b9baba; // Converted from 2px
+    //   border-radius: 0.8rem; // Converted from 8px
+    //   transform: translateY(-0.4rem); // Converted from -4px
+    //   transition: all 0.1s ease;
 
-      // 3D effect
-      box-shadow: 0 0.4rem 0 #b9baba, 0 0.4rem 0.6rem rgba(0, 0, 0, 0.1); // Converted from 4px and 6px
+    //   // 3D effect
+    //   box-shadow: 0 0.4rem 0 #b9baba, 0 0.4rem 0.6rem rgba(0, 0, 0, 0.1); // Converted from 4px and 6px
 
-      &:hover {
-        transform: translateY(-0.5rem); // Converted from -5px
-        box-shadow: 0 0.5rem 0 #b9baba, 0 0.5rem 0.6rem rgba(0, 0, 0, 0.1); // Converted from 5px and 6px
-      }
+    //   &:hover {
+    //     transform: translateY(-0.5rem); // Converted from -5px
+    //     box-shadow: 0 0.5rem 0 #b9baba, 0 0.5rem 0.6rem rgba(0, 0, 0, 0.1); // Converted from 5px and 6px
+    //   }
 
-      &:active {
-        transform: translateY(0);
-        box-shadow: 0 0 0 #b9baba, 0 0 0 rgba(0, 0, 0, 0.1);
-      }
+    //   &:active {
+    //     transform: translateY(0);
+    //     box-shadow: 0 0 0 #b9baba, 0 0 0 rgba(0, 0, 0, 0.1);
+    //   }
 
-      // Success state with lighter green
-      &.n-button--success-type {
-        background: #cceada;
-        border-color: #aad3bb;
-        color: #2c7a4d; // Darker text for contrast
-        box-shadow: 0 0.4rem 0 #aad3bb, 0 0.4rem 0.6rem rgba(0, 0, 0, 0.1); // Converted from 4px and 6px
+    //   // Success state with lighter green
+    //   &.n-button--success-type {
+    //     background: #cceada;
+    //     border-color: #aad3bb;
+    //     color: #2c7a4d; // Darker text for contrast
+    //     box-shadow: 0 0.4rem 0 #aad3bb, 0 0.4rem 0.6rem rgba(0, 0, 0, 0.1); // Converted from 4px and 6px
 
-        &:hover {
-          box-shadow: 0 0.5rem 0 #aad3bb, 0 0.5rem 0.6rem rgba(0, 0, 0, 0.1); // Converted from 5px and 6px
-        }
+    //     &:hover {
+    //       box-shadow: 0 0.5rem 0 #aad3bb, 0 0.5rem 0.6rem rgba(0, 0, 0, 0.1); // Converted from 5px and 6px
+    //     }
 
-        &:active {
-          box-shadow: 0 0 0 #aad3bb, 0 0 0 rgba(0, 0, 0, 0.1);
-        }
-      }
+    //     &:active {
+    //       box-shadow: 0 0 0 #aad3bb, 0 0 0 rgba(0, 0, 0, 0.1);
+    //     }
+    //   }
 
-      // Error state
-      &.n-button--error-type {
-        background: #ffd6d6;
-        border-color: #ffb3b3;
-        color: #d03050;
-        box-shadow: 0 0.4rem 0 #ffb3b3, 0 0.4rem 0.6rem rgba(0, 0, 0, 0.1); // Converted from 4px and 6px
+    //   // Error state
+    //   &.n-button--error-type {
+    //     background: #ffd6d6;
+    //     border-color: #ffb3b3;
+    //     color: #d03050;
+    //     box-shadow: 0 0.4rem 0 #ffb3b3, 0 0.4rem 0.6rem rgba(0, 0, 0, 0.1); // Converted from 4px and 6px
 
-        &:hover {
-          box-shadow: 0 0.5rem 0 #ffb3b3, 0 0.5rem 0.6rem rgba(0, 0, 0, 0.1); // Converted from 5px and 6px
-        }
+    //     &:hover {
+    //       box-shadow: 0 0.5rem 0 #ffb3b3, 0 0.5rem 0.6rem rgba(0, 0, 0, 0.1); // Converted from 5px and 6px
+    //     }
 
-        &:active {
-          box-shadow: 0 0 0 #ffb3b3, 0 0 0 rgba(0, 0, 0, 0.1);
-        }
-      }
+    //     &:active {
+    //       box-shadow: 0 0 0 #ffb3b3, 0 0 0 rgba(0, 0, 0, 0.1);
+    //     }
+    //   }
 
-      .n-ellipsis {
-        line-height: 2rem;
+    //   .n-ellipsis {
+    //     line-height: 2rem;
 
-        span {
-          font-weight: bold;
-        }
-      }
-    }
+    //     span {
+    //       font-weight: bold;
+    //     }
+    //   }
+    // }
   }
 }
 
