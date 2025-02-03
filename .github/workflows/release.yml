@@ -21,7 +21,8 @@ jobs:
           node-version: '20'
       - name: Install dependencies
         run: |
-          npm config set registry https://registry.npmjs.org/
+          npm config delete registry
+          npm cache clean --force
           npm install
       - name: Run semantic-release
         run: npx semantic-release
