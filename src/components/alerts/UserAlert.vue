@@ -1,5 +1,4 @@
 // TODO : Rename this component
-
 <template>
   <n-space vertical :size="12">
     <n-alert
