@@ -12,7 +12,7 @@
       </div>
     </div>
     <div class="info">
-      <p>Pic Roulette {{ appVersion }}</p>
+      <p>Pic Roulette v{{ appVersion }}</p>
       <p>Pacifique Stormz</p>
     </div>
     <div>
