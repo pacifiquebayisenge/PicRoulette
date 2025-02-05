@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/pacifiquebayisenge/PicRoulette/compare/v1.1.0...v1.2.0) (2025-02-05)
+
+
+### Features
+
+* app version ([c916d3c](https://github.com/pacifiquebayisenge/PicRoulette/commit/c916d3c718b4ced5dafd3463e596b8aef155bec5))
+
 # [1.1.0](https://github.com/pacifiquebayisenge/PicRoulette/compare/v1.0.0...v1.1.0) (2025-02-05)
 
 
