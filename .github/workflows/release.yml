@@ -6,8 +6,32 @@ on:
   pull_request:
     branches:
       - main
+
 jobs:
+  check-commit:
+    runs-on: ubuntu-latest
+    outputs:
+      should_release: ${{ steps.check.outputs.match }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - id: check
+        run: |
+          if [[ ${{ github.event_name }} == 'pull_request' ]]; then
+            TITLE="${{ github.event.pull_request.title }}"
+          else
+            TITLE=$(git log -1 --pretty=%B)
+          fi
+          if [[ $TITLE =~ ^(fix:|feat:|feat!:|BREAKING CHANGE:) ]]; then
+            echo "match=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "match=false" >> "$GITHUB_OUTPUT"
+          fi
+
   release:
+    needs: check-commit
+    if: needs.check-commit.outputs.should_release == 'true'
     name: Release
     runs-on: ubuntu-latest
     steps:
