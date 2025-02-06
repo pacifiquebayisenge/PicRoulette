@@ -1,3 +1,10 @@
+## [1.2.6](https://github.com/pacifiquebayisenge/PicRoulette/compare/v1.2.5...v1.2.6) (2025-02-06)
+
+
+### Bug Fixes
+
+* remove not used svg icons + new command ([5fb8b62](https://github.com/pacifiquebayisenge/PicRoulette/commit/5fb8b62bba3bb2b4c3d483bfa2f9aa72f77bd2c7))
+
 ## [1.2.5](https://github.com/pacifiquebayisenge/PicRoulette/compare/v1.2.4...v1.2.5) (2025-02-06)
 
 
