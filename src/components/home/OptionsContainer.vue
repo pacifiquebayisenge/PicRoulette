@@ -135,7 +135,7 @@ export default {
             alertType: val ? "success" : "error",
           }),
         duration: 3000,
-        closable: false, // optional, duration in milliseconds
+        closable: false,
       });
     },
 
