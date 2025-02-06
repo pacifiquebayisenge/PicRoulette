@@ -39,7 +39,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          persist-credentials: false  # Important for semantic-release
+          persist-credentials: true  # This ensures authentication with the token
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -54,7 +54,7 @@ jobs:
       - name: Configure git user
         run: |
           git config --global user.name 'GitHub Actions Bot'
-          git config --global user.email '<>'  # Ensure you set a valid email
+          git config --global user.email 'actions@github.com'  # Use a generic email
 
       # Remove [skip ci] from the commit message if present
       - name: Remove [skip ci] from commit message
@@ -63,12 +63,6 @@ jobs:
           # Remove the [skip ci] tag from the commit message
           NEW_COMMIT_MESSAGE=$(echo "$COMMIT_MESSAGE" | sed 's/\[skip ci\]//g')
           git commit --amend --no-edit -m "$NEW_COMMIT_MESSAGE"
-          git push --force-with-lease
-
-      # Authenticate with GitHub and push the changes
-      - name: Authenticate and push changes
-        run: |
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           git push --force-with-lease
 
       - name: Run semantic-release
