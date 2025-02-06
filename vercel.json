@@ -60,11 +60,9 @@
       "destination": "/index.html"
     }
   ],
+
   "git": {
-    "deploymentEnabled": {
-      "main": {
-        "ignored": ["!(*chore(release):*)"]
-      }
-    }
-  }
+    "deploymentEnabled": false
+  },
+  "ignoreCommand": "git log -1 --pretty=%B | grep -i \"chore(release):\""
 }
