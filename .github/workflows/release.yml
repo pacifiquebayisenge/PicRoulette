@@ -68,7 +68,7 @@ jobs:
       # Authenticate with GitHub and push the changes
       - name: Authenticate and push changes
         run: |
-          git remote set-url origin https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}.git
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           git push --force-with-lease
 
       - name: Run semantic-release
