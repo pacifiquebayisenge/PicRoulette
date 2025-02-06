@@ -1,3 +1,11 @@
+## [1.2.4](https://github.com/pacifiquebayisenge/PicRoulette/compare/v1.2.3...v1.2.4) (2025-02-06)
+
+
+### Bug Fixes
+
+* release.yml trigger vercel deploy ([94299dc](https://github.com/pacifiquebayisenge/PicRoulette/commit/94299dc09e6573a4292c71b37bc0abe5edeac6f5))
+* release.yml trigger vercel deploy ([c064b2b](https://github.com/pacifiquebayisenge/PicRoulette/commit/c064b2bdffffd7ef60d9caeee9a09e7be001a050))
+
 ## [1.2.3](https://github.com/pacifiquebayisenge/PicRoulette/compare/v1.2.2...v1.2.3) (2025-02-06)
 
 
