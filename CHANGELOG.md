@@ -1,3 +1,10 @@
+## [1.2.7](https://github.com/pacifiquebayisenge/PicRoulette/compare/v1.2.6...v1.2.7) (2025-02-06)
+
+
+### Bug Fixes
+
+* vercel json update ([3e54246](https://github.com/pacifiquebayisenge/PicRoulette/commit/3e542460dc99c318dcb212cd44090714506090f8))
+
 ## [1.2.6](https://github.com/pacifiquebayisenge/PicRoulette/compare/v1.2.5...v1.2.6) (2025-02-06)
 
 
