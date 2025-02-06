@@ -1,3 +1,10 @@
+## [1.2.8](https://github.com/pacifiquebayisenge/PicRoulette/compare/v1.2.7...v1.2.8) (2025-02-06)
+
+
+### Bug Fixes
+
+* code clean up ([34bbd81](https://github.com/pacifiquebayisenge/PicRoulette/commit/34bbd81afb3c12a9db2e02467180a85fd1ee5870))
+
 ## [1.2.7](https://github.com/pacifiquebayisenge/PicRoulette/compare/v1.2.6...v1.2.7) (2025-02-06)
 
 
