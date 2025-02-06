@@ -14,7 +14,7 @@
       <div v-if="user && alertType == 'error'" class="alert-content">left the room</div>
       <div v-if="alertType == 'error'" class="alert-content">{{ message }}</div>
       <div
-        v-if="alertType == 'success' && title == 'Notifications'"
+        v-if="alertType == 'success' && title.includes('Notifications')"
         class="alert-content"
       >
         {{ message }}

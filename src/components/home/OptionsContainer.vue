@@ -26,8 +26,9 @@ import { h } from "vue"; // Import h function
 import { useNotification } from "naive-ui";
 import appVersion from "@/utils/version";
 import {
-  subscribeToPushNotifications,
-  unsubscribeOfPushNotifications,
+  subToPushNotifs,
+  checkSubToPushNotif,
+  unsubOfPushNotif,
 } from "@/utils/subscribePushNotifications";
 import UserAlert from "@/components/alerts/UserAlert.vue";
 
@@ -49,10 +50,10 @@ export default {
   },
 
   mounted() {
-    this.checkNotificationPermission();
+    this.checkDeviceNotifPermisson();
   },
   methods: {
-    checkNotificationPermission() {
+    async checkDeviceNotifPermisson() {
       if (!("Notification" in window)) {
         console.log("This browser does not support notifications");
         return;
@@ -62,18 +63,26 @@ export default {
 
       if (this.pushPermission === "denied") {
         console.log("Notifications were previously denied");
-        this.pushPermission = false;
         return;
       }
 
       if (this.pushPermission === "granted") {
-        console.log("Notifications already permitted");
-        this.pushPermission = true;
+        console.log("Device notifications already permitted");
+        await this.checkPushSubscription();
         return;
       }
     },
 
-    async checkPushSubscription() {},
+    async checkPushSubscription() {
+      const response = await checkSubToPushNotif();
+
+      console.log(
+        response
+          ? "Subscribed to push notifcations"
+          : "Not subscribed to push notifcations"
+      );
+      this.pushPermission = response;
+    },
 
     async requestNotificationPermission() {
       if (!("Notification" in window)) {
@@ -81,55 +90,31 @@ export default {
         return;
       }
 
-      try {
-        const permission = await Notification.requestPermission();
-        if (permission === "granted") {
-          this.pushPermission = true;
+      const permission = await Notification.requestPermission();
+
+      if (permission === "granted") {
+        const response = await subToPushNotifs();
+
+        if (response) {
           this.pushPermissionAlert(true);
-          const response = await subscribeToPushNotifications();
+          this.pushPermission = true;
           console.log(response);
-        } else {
-          console.log("not granted");
-          this.pushPermission = false;
-          this.pushPermissionAlert(false);
         }
-      } catch (error) {
-        console.log("Error:", error);
+      } else {
+        console.log("not granted");
+        this.pushPermission = false;
+        this.pushPermissionAlert(false);
       }
     },
 
     // Check if the service worker has a push subscription
     async checkAndDeleteSubscription() {
-      try {
-        // Ensure the service worker is available
-        if ("serviceWorker" in navigator && "PushManager" in window) {
-          const registration = await navigator.serviceWorker.getRegistration();
-          if (!registration) {
-            console.log("Service worker not registered.");
-            return;
-          }
+      const response = await unsubOfPushNotif();
 
-          const subscription = await registration.pushManager.getSubscription();
-
-          // Check if there is an existing subscription
-          if (subscription) {
-            console.log("Existing subscription found, deleting...");
-
-            // Unsubscribe and delete the subscription
-            await subscription.unsubscribe();
-            const response = await unsubscribeOfPushNotifications(subscription);
-
-            console.log(response);
-            this.pushPermission = false;
-            this.pushPermissionAlert(false);
-          } else {
-            console.log("No existing subscription found.");
-          }
-        } else {
-          console.log("Service Worker or PushManager is not supported.");
-        }
-      } catch (error) {
-        console.error("Error while checking and deleting subscription:", error);
+      if (response) {
+        console.log(response);
+        this.pushPermission = false;
+        this.pushPermissionAlert(false);
       }
     },
 
@@ -143,10 +128,10 @@ export default {
       this.notification.create({
         content: () =>
           h(UserAlert, {
-            title: "Notifications",
+            title: val ? "😁 Notifications 😁" : "😞 Notifications 😞",
             message: val
-              ? "😁 we will keep in touch 😁"
-              : "😞 We won't bother you any longer... 😞",
+              ? " we will keep in touch "
+              : " We won't bother you any longer... ",
             alertType: val ? "success" : "error",
           }),
         duration: 3000,

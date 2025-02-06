@@ -103,8 +103,8 @@ import socketService from "@/services/socketService";
 import userService from "@/services/userService";
 import gameService from "@/services/gameSercive";
 import {
-  subscribeToPushNotifications,
-  unsubscribeOfPushNotifications,
+  subToPushNotifs,
+  unsubOfPushNotif,
 } from "@/utils/subscribePushNotifications";
 import OptionsContainer from "./home/OptionsContainer.vue";
 
@@ -503,7 +503,7 @@ export default {
         const permission = await Notification.requestPermission();
         if (permission === "granted") {
           this.pushPermission = permission;
-          const response = await subscribeToPushNotifications();
+          const response = await subToPushNotifs();
           console.log(response);
         } else {
           console.log("not granted");
@@ -532,7 +532,7 @@ export default {
 
             // Unsubscribe and delete the subscription
             await subscription.unsubscribe();
-            const response = await unsubscribeOfPushNotifications(subscription);
+            const response = await unsubOfPushNotif(subscription);
 
             console.log(response);
           } else {
