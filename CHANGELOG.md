@@ -1,3 +1,10 @@
+## [1.2.2](https://github.com/pacifiquebayisenge/PicRoulette/compare/v1.2.1...v1.2.2) (2025-02-06)
+
+
+### Bug Fixes
+
+* notifications handling ([2205ebc](https://github.com/pacifiquebayisenge/PicRoulette/commit/2205ebca1a6045bbb6da89e4d9573affa8d4371f))
+
 ## [1.2.1](https://github.com/pacifiquebayisenge/PicRoulette/compare/v1.2.0...v1.2.1) (2025-02-05)
 
 
