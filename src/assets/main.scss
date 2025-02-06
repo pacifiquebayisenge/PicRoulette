@@ -1,0 +1,245 @@
+@import './base.css';
+
+body,
+html {
+  background: rgb(103, 168, 244);
+  background: -moz-linear-gradient(360deg, #67a8f4 0%, #42d392 78%);
+  background: -webkit-linear-gradient(360deg, rgba(103, 168, 244, 1) 0%, rgba(66, 211, 146, 1) 78%);
+  background: linear-gradient(360deg, rgba(103, 168, 244, 1) 0%, rgba(66, 211, 146, 1) 78%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#67a8f4",endColorstr="#42d392",GradientType=1);
+  height: 100vh;
+  overflow-y: hidden;
+  touch-action: none;
+}
+
+#app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  height: 100%;
+}
+
+a,
+.green {
+  text-decoration: none;
+  color: hsla(160, 100%, 37%, 1);
+  transition: 0.4s;
+  padding: 3px;
+}
+
+.notification {
+  .n-notification-wrapper,
+  .n-notification {
+    all: unset;
+  }
+
+  .n-notification-main {
+    padding: 0 !important;
+  }
+}
+
+.n-card {
+  top: -400rem;
+  animation: fall-down 800ms ease-out forwards;
+}
+
+@keyframes fall-down {
+  0% {
+    top: -400px; /* Start above */
+    opacity: 0; /* Fully transparent */
+  }
+  100% {
+    top: 0; /* End at the original position */
+    opacity: 1; /* Fully visible */
+
+    box-shadow: 5px 7px 7px #515151;
+    transform: translateZ(0);
+    // filter: drop-shadow(5px 6px 11px #515151);
+  }
+}
+
+// Adjustments for responsiveness
+@media (max-width: 76.8rem) {
+  .n-card {
+    top: 0;
+    animation: none;
+    filter: drop-shadow(5px 6px 11px #515151);
+  }
+}
+
+.install-dialog-container {
+  .n-dialog__title {
+    font-weight: 400;
+    font-family: 'Rammetto One', sans-serif;
+    background: rgb(103, 168, 244);
+    background: -moz-linear-gradient(270deg, rgb(103, 168, 244) 0%, rgb(66, 211, 146) 78%);
+    background: -webkit-linear-gradient(270deg, rgb(103, 168, 244) 0%, rgb(66, 211, 146) 78%);
+    background: linear-gradient(270deg, rgb(103, 168, 244) 0%, rgb(66, 211, 146) 78%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#67a8f4", endColorstr="#42d392", GradientType=1);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .n-dialog__content div {
+    p,
+    span {
+      color: #66a8f2;
+      font-weight: 900;
+    }
+
+    span {
+      text-decoration: underline;
+    }
+  }
+  .n-dialog__action {
+    justify-content: center;
+  }
+}
+
+h1 {
+  font-size: 3rem;
+  font-weight: 400;
+  font-family: 'Rammetto One', sans-serif;
+  background: rgb(103, 168, 244);
+  background: -moz-linear-gradient(270deg, rgba(103, 168, 244, 1) 0%, rgba(66, 211, 146, 1) 78%);
+  background: -webkit-linear-gradient(270deg, rgba(103, 168, 244, 1) 0%, rgba(66, 211, 146, 1) 78%);
+  background: linear-gradient(270deg, rgba(103, 168, 244, 1) 0%, rgba(66, 211, 146, 1) 78%);
+
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#67a8f4", endColorstr="#42d392", GradientType=1);
+
+  /* Text-specific properties */
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* Hides the actual color and shows only the gradient */
+}
+
+main {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button-3D {
+  position: relative;
+  padding: 0.75rem 1.5rem;
+  background: #ffffff;
+  border: 0.2rem solid #b9baba;
+  border-radius: 0.8rem;
+  transform: translateY(-0.4rem);
+  transition: all 0.1s ease;
+  box-shadow:
+    0 0.4rem 0 #b9baba,
+    0 0.4rem 0.6rem rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    background: #ffffff; /* Force white background on hover */
+    transform: translateY(-0.5rem);
+    box-shadow:
+      0 0.5rem 0 #b9baba,
+      0 0.5rem 0.6rem rgba(0, 0, 0, 0.1);
+  }
+
+  &:active {
+    background: #ffffff; /* Force white background on active */
+    transform: translateY(0);
+    box-shadow:
+      0 0 0 #b9baba,
+      0 0 0 rgba(0, 0, 0, 0.1);
+  }
+
+  &,
+  &:active,
+  &:focus {
+    .n-button__border,
+    .n-button__state-border {
+      border: none !important;
+    }
+  }
+
+  .n-button__content {
+    font-weight: bolder;
+  }
+
+  &.n-button:not(.n-button--disabled):not(.button-3D-colorfull):focus,
+  &.n-button:not(.n-button--disabled):not(.button-3D-colorfull):hover {
+    background-color: white;
+  }
+
+  &-colorfull {
+    // Success state with lighter green
+    &.n-button--success-type {
+      background: #cceada;
+      border-color: #aad3bb;
+      color: #2c7a4d; // Darker text for contrast
+      box-shadow:
+        0 0.4rem 0 #aad3bb,
+        0 0.4rem 0.6rem rgba(0, 0, 0, 0.1); // Converted from 4px and 6px
+
+      &:hover {
+        box-shadow:
+          0 0.5rem 0 #aad3bb,
+          0 0.5rem 0.6rem rgba(0, 0, 0, 0.1); // Converted from 5px and 6px
+      }
+
+      &:active {
+        box-shadow:
+          0 0 0 #aad3bb,
+          0 0 0 rgba(0, 0, 0, 0.1);
+      }
+
+     
+    }
+
+    // Error state
+    &.n-button--error-type {
+      background: #ffd6d6;
+      border-color: #ffb3b3;
+      color: #d03050;
+      box-shadow:
+        0 0.4rem 0 #ffb3b3,
+        0 0.4rem 0.6rem rgba(0, 0, 0, 0.1); // Converted from 4px and 6px
+
+      &:hover {
+        box-shadow:
+          0 0.5rem 0 #ffb3b3,
+          0 0.5rem 0.6rem rgba(0, 0, 0, 0.1); // Converted from 5px and 6px
+      }
+
+      &:active {
+        box-shadow:
+          0 0 0 #ffb3b3,
+          0 0 0 rgba(0, 0, 0, 0.1);
+      }
+    }
+
+    .n-ellipsis {
+      line-height: 2rem;
+
+      span {
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+@media (hover: hover) {
+  a:hover {
+    background-color: hsla(160, 100%, 37%, 0.2);
+  }
+}
+
+@media (min-width: 1024px) {
+  body {
+    display: flex;
+    place-items: center;
+    height: 100%;
+  }
+
+  #app {
+    padding: 0 2rem;
+    width: 100%;
+  }
+}
