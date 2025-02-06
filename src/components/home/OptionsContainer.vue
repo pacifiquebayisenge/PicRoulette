@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { h } from "vue"; // Import h function
+import { h } from "vue";
 import { useNotification } from "naive-ui";
 import appVersion from "@/utils/version";
 import {
