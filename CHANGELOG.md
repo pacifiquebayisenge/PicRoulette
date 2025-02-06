@@ -1,3 +1,10 @@
+# 1.0.0 (2025-02-06)
+
+
+### Bug Fixes
+
+* release.yml trigger vercel deploy ([4ee25b9](https://github.com/pacifiquebayisenge/PicRoulette/commit/4ee25b97cc64e796f2e8289885ebe29da32eb92a))
+
 ## [1.2.2](https://github.com/pacifiquebayisenge/PicRoulette/compare/v1.2.1...v1.2.2) (2025-02-06)
 
 
