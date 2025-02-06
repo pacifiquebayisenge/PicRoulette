@@ -1,5 +1,4 @@
 name: Release
-
 on:
   push:
     branches:
@@ -39,32 +38,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          persist-credentials: true  # This ensures authentication with the token
-
+          persist-credentials: false  # Important for semantic-release
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-
       - name: Install dependencies
         run: |
           npm install -g yarn
           yarn install
-
       - name: Configure git user
         run: |
           git config --global user.name 'GitHub Actions Bot'
-          git config --global user.email 'actions@github.com'  # Use a generic email
-
-      # Remove [skip ci] from the commit message if present
-      - name: Remove [skip ci] from commit message
-        run: |
-          COMMIT_MESSAGE=$(git log -1 --pretty=%B)
-          # Remove the [skip ci] tag from the commit message
-          NEW_COMMIT_MESSAGE=$(echo "$COMMIT_MESSAGE" | sed 's/\[skip ci\]//g')
-          git commit --amend --no-edit -m "$NEW_COMMIT_MESSAGE"
-          git push --force-with-lease
-
+          git config --global user.email '<>'
       - name: Run semantic-release
         run: npx semantic-release
         env:
