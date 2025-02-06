@@ -54,7 +54,7 @@ jobs:
       - name: Configure git user
         run: |
           git config --global user.name 'GitHub Actions Bot'
-          git config --global user.email '<>'
+          git config --global user.email '<>'  # Ensure you set a valid email
 
       # Remove [skip ci] from the commit message if present
       - name: Remove [skip ci] from commit message
@@ -63,6 +63,12 @@ jobs:
           # Remove the [skip ci] tag from the commit message
           NEW_COMMIT_MESSAGE=$(echo "$COMMIT_MESSAGE" | sed 's/\[skip ci\]//g')
           git commit --amend --no-edit -m "$NEW_COMMIT_MESSAGE"
+          git push --force-with-lease
+
+      # Authenticate with GitHub and push the changes
+      - name: Authenticate and push changes
+        run: |
+          git remote set-url origin https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}.git
           git push --force-with-lease
 
       - name: Run semantic-release
