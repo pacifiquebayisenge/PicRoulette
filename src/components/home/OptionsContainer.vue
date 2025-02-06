@@ -81,6 +81,7 @@ export default {
           ? "Subscribed to push notifcations"
           : "Not subscribed to push notifcations"
       );
+
       this.pushPermission = response;
     },
 
