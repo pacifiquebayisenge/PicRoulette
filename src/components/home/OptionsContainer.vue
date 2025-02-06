@@ -107,7 +107,6 @@ export default {
       }
     },
 
-    // Check if the service worker has a push subscription
     async checkAndDeleteSubscription() {
       const response = await unsubOfPushNotif();
 
