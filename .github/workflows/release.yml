@@ -1,8 +1,13 @@
 name: Release
+
 on:
   push:
     branches:
       - main
+    tags:
+      - '*' # Match all tags except those with [skip ci]
+      - '!refs/tags/*[skip ci]*' 
+
   pull_request:
     branches:
       - main
