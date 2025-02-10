@@ -101,11 +101,8 @@ import { toRaw } from "vue";
 import { MAX_IMAGE_UPLOAD } from "@/constants";
 import socketService from "@/services/socketService";
 import userService from "@/services/userService";
-import gameService from "@/services/gameSercive";
-import {
-  subToPushNotifs,
-  unsubOfPushNotif,
-} from "@/utils/subscribePushNotifications";
+import gameService from "@/services/gameService";
+import { subToPushNotifs, unsubOfPushNotif } from "@/utils/subscribePushNotifications";
 import OptionsContainer from "./home/OptionsContainer.vue";
 
 export default {
@@ -455,7 +452,17 @@ export default {
 
     async sendToServer() {
       // If the requirement is met, emit the images to the socket server
-      await this.socket.emit("imageUploaded", toRaw(this.imagePreviews));
+      // await this.socket.emit("imageUploaded", toRaw(this.imagePreviews));
+
+      const response = await fetch(`http://localhost:8080/api/gameImages`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(toRaw(this.imagePreviews)),
+      });
+
+      console.log(response);
     },
 
     updateOverallProgress() {

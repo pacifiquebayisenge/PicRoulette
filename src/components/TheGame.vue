@@ -18,7 +18,7 @@
 
     <div class="voting-btns">
       <n-button
-        class="button-3D-colorfull"
+         class="button-3D button-3D-colorfull"
         v-for="(user, index) in userList"
         :key="index"
         secondary
@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import gameService from "@/services/gameSercive";
+import gameService from "@/services/gameService";
 import socketService from "@/services/socketService";
 import userService from "@/services/userService";
 

@@ -163,8 +163,9 @@ main {
     font-weight: bolder;
   }
 
-  &.n-button:not(.n-button--disabled):not(.button-3D-colorfull):focus,
-  &.n-button:not(.n-button--disabled):not(.button-3D-colorfull):hover {
+  &.n-button:not(.n-button--disabled):not(.button-3D-colorfull.n-button--error-type):not(.button-3D-colorfull.n-button--success-type):focus,
+  &.n-button:not(.n-button--disabled):not(.button-3D-colorfull.n-button--error-type):not(.button-3D-colorfull.n-button--success-type):hover 
+  {
     background-color: white;
   }
 

@@ -67,11 +67,8 @@ import { toRaw } from "vue";
 import { MAX_IMAGE_UPLOAD } from "@/constants";
 import socketService from "@/services/socketService";
 import userService from "@/services/userService";
-import gameService from "@/services/gameSercive";
-import {
-  subToPushNotifs,
-  unsubOfPushNotif,
-} from "@/utils/subscribePushNotifications";
+import gameService from "@/services/gameService";
+import { subToPushNotifs, unsubOfPushNotif } from "@/utils/subscribePushNotifications";
 
 export default {
   components: {},
