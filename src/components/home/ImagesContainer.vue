@@ -108,7 +108,7 @@ export default {
               name: file.name.replace(/\.\w+$/, ".webp"),
             });
           }
-          this.updateConversionProgress(this.convertedImages.length);
+          this.updateConversionProgress();
         } catch (error) {
           console.error(`Error processing image ${file.name}:`, error.message);
         }
@@ -174,13 +174,7 @@ export default {
         console.log("📢 Received progress update:", uploadedCount);
 
         this.successfulUploads = uploadedCount;
-        this.serverUploadProgress = Math.trunc(
-          (this.successfulUploads / this.convertedImages.length) * 100
-        );
-
-        if (this.serverUploadProgress >= 100) {
-          this.serverUploadProgress = 100;
-        }
+        this.updateUploadProgress();
       });
 
       const response = await supabaseService.uploadImages(toRaw(this.convertedImages));
@@ -192,12 +186,25 @@ export default {
       this.uploading = false;
     },
 
-    updateConversionProgress(completed) {
-      this.imgConversionProgress = Math.trunc((completed / this.rawImagesCount) * 100);
+    updateConversionProgress() {
+      this.imgConversionProgress = Math.trunc(
+        (this.convertedImages.length / this.rawImagesCount) * 100
+      );
 
       // Cap the progress at 100% once all uploads are done
       if (this.imgConversionProgress >= 100) {
         this.imgConversionProgress = 100;
+      }
+    },
+    updateUploadProgress() {
+      this.serverUploadProgress = Math.trunc(
+        (this.successfulUploads / this.convertedImages.length) * 100
+      );
+
+      // Cap the progress at 100% once all uploads are done
+
+      if (this.serverUploadProgress >= 100) {
+        this.serverUploadProgress = 100;
       }
     },
 
