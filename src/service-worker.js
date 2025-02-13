@@ -42,8 +42,8 @@ self.addEventListener('push', (event) => {
     return;
   }
 
-  console.log(event)
-  console.log(event.data.json())
+  // console.log(event)
+  // console.log(event.data.json())
   // Try to parse the data as JSON first
   let notification;
   try {

@@ -64,7 +64,7 @@ export default {
 
     this.socket.on("game-image", (data) => {
       this.idReveal = false;
-      console.log(data);
+      // console.log(data);
       this.currentImageobject = data;
     });
 
