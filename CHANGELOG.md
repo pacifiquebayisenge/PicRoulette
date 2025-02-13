@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/pacifiquebayisenge/PicRoulette/compare/v1.2.8...v1.3.0) (2025-02-13)
+
+
+### Features
+
+* rest api image upload + ([857b017](https://github.com/pacifiquebayisenge/PicRoulette/commit/857b01742d1d20e73ab0aaee32f3ddafc5fc0317))
+
 ## [1.2.8](https://github.com/pacifiquebayisenge/PicRoulette/compare/v1.2.7...v1.2.8) (2025-02-06)
 
 
