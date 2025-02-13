@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/pacifiquebayisenge/PicRoulette/compare/v1.4.0...v1.4.1) (2025-02-13)
+
+
+### Bug Fixes
+
+* server upload progress ([5aac5c8](https://github.com/pacifiquebayisenge/PicRoulette/commit/5aac5c86bba8b8488c09ff311ccac0f3e32f9bcb))
+
 # [1.4.0](https://github.com/pacifiquebayisenge/PicRoulette/compare/v1.3.0...v1.4.0) (2025-02-13)
 
 
