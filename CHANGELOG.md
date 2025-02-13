@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/pacifiquebayisenge/PicRoulette/compare/v1.3.0...v1.4.0) (2025-02-13)
+
+
+### Features
+
+* landing page layout ([ed29622](https://github.com/pacifiquebayisenge/PicRoulette/commit/ed2962272429ca65b393099ec7542bcd2416bfd2))
+
 # [1.3.0](https://github.com/pacifiquebayisenge/PicRoulette/compare/v1.2.8...v1.3.0) (2025-02-13)
 
 
