@@ -28,7 +28,7 @@
       v-if="serverUploadProgress"
       type="line"
       color="#36ad6a"
-      :percentage="100"
+      :percentage="serverUploadProgress"
       indicator-placement="inside"
       processing
     />
@@ -66,6 +66,7 @@ export default {
       imgConversionProgress: 0,
       serverUploadProgress: 0,
       successfulUploads: 0, // total images successfully uploaded,
+      uploading: false,
     };
   },
   computed: {
@@ -158,13 +159,37 @@ export default {
     },
 
     async sendToStorage() {
-      this.serverUploadProgress = true;
+      if (this.uploading) {
+        console.log("⚠ Already uploading, ignoring duplicate call");
+        return;
+      }
+      this.uploading = true; // Prevent multiple calls
+      this.serverUploadProgress = 0;
+      this.successfulUploads = 0;
+
+      console.log("🔄 Reset successfulUploads:", this.successfulUploads);
+
+      // Set real-time progress callback
+      supabaseService.setProgressCallback((uploadedCount) => {
+        console.log("📢 Received progress update:", uploadedCount);
+
+        this.successfulUploads = uploadedCount;
+        this.serverUploadProgress = Math.trunc(
+          (this.successfulUploads / this.convertedImages.length) * 100
+        );
+
+        if (this.serverUploadProgress >= 100) {
+          this.serverUploadProgress = 100;
+        }
+      });
 
       const response = await supabaseService.uploadImages(toRaw(this.convertedImages));
 
-      this.successfulUploads = response;
+      console.log(response);
+      // this.successfulUploads = response;
       this.readyState();
       this.convertedImages = [];
+      this.uploading = false;
     },
 
     updateConversionProgress(completed) {
