@@ -180,15 +180,24 @@ main {
         0 0.4rem 0.6rem rgba(0, 0, 0, 0.1); // Converted from 4px and 6px
 
       &:hover {
+        
+        color: #fff;
+        background-color: #36ad6a;
         box-shadow:
           0 0.5rem 0 #aad3bb,
           0 0.5rem 0.6rem rgba(0, 0, 0, 0.1); // Converted from 5px and 6px
       }
 
       &:active {
+        color: #fff;
+        background-color: #36ad6a;
         box-shadow:
           0 0 0 #aad3bb,
           0 0 0 rgba(0, 0, 0, 0.1);
+      }
+
+      &:focus {
+        background: #cceada;
       }
 
      
@@ -204,15 +213,23 @@ main {
         0 0.4rem 0.6rem rgba(0, 0, 0, 0.1); // Converted from 4px and 6px
 
       &:hover {
+        color: #fff;
+        background-color: #de576d;
         box-shadow:
           0 0.5rem 0 #ffb3b3,
           0 0.5rem 0.6rem rgba(0, 0, 0, 0.1); // Converted from 5px and 6px
       }
 
       &:active {
+        color: #fff;
+        background-color: #de576d;
         box-shadow:
           0 0 0 #ffb3b3,
           0 0 0 rgba(0, 0, 0, 0.1);
+      }
+
+      &:focus {
+        background: #ffd6d6;
       }
     }
 
