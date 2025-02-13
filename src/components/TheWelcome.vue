@@ -17,7 +17,6 @@
           />
           <n-button
             class="button-3D button-3D-colorfull"
-            type="success"
             success
             :bordered="false"
             @click="connectToSocket"
@@ -25,7 +24,6 @@
           >
           <n-button
             class="button-3D button-3D-colorfull"
-            type="error"
             success
             :bordered="false"
             @click="handleBack"
