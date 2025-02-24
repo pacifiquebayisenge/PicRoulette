@@ -1,17 +1,3 @@
-<<<<<<< HEAD
-self.addEventListener('install', (event) => {
-    console.log('Service Worker: Installed');
-  });
-  
-  self.addEventListener('activate', (event) => {
-    console.log('Service Worker: Activated');
-  });
-  
-  self.addEventListener('fetch', (event) => {
-    console.log('Fetching:', event.request.url);
-  });
-  
-=======
 /* eslint-disable no-unused-vars */
 // service-worker.js
 import { registerRoute } from 'workbox-routing';
@@ -117,4 +103,3 @@ self.addEventListener('notificationclick', (event) => {
     })
   );
 });
->>>>>>> 3a1491cc7e37d3b8b3304baf646935c9fa3f2ac5

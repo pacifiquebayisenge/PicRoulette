@@ -4,7 +4,6 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { VitePWA } from 'vite-plugin-pwa'
 
-import { VitePWA } from 'vite-plugin-pwa'
 
 import { version } from './package.json';
 
@@ -14,23 +13,6 @@ export default defineConfig({
   plugins: [
     vue(),
     VitePWA({
-<<<<<<< HEAD
-      injectRegister: 'auto',
-      registerType: 'autoUpdate',
-      devOptions: {
-        enabled: true
-      },
-      workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg}']
-      },
-      strategies :'injectManifest',
-      srcDir: 'src',
-      filename: 'service-worker.js',
-      manifest: {
-        name: 'Pic Roulette',
-        short_name: 'PicRoulette',
-        description: 'Picture guessing game',
-=======
       strategies: 'injectManifest', // Specify injectManifest strategy
       srcDir: 'src', // Source directory where your service-worker.js is located
       filename: 'service-worker.js', // Output file name for the service worker
@@ -53,7 +35,6 @@ export default defineConfig({
         short_name: 'Pic Roulette',
         description: 'Picture geussing game',
         permissions: ["push", "notifications"],
->>>>>>> 3a1491cc7e37d3b8b3304baf646935c9fa3f2ac5
         theme_color: '#42d392',
         icons: [
           {
@@ -68,12 +49,8 @@ export default defineConfig({
           }
         ]
       }
-<<<<<<< HEAD
-    })
-=======
     }),
     
->>>>>>> 3a1491cc7e37d3b8b3304baf646935c9fa3f2ac5
   ],
   define: {
     __APP_VERSION__: JSON.stringify(version)

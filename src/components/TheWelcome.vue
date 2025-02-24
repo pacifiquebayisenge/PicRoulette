@@ -362,59 +362,6 @@ export default {
 </script>
 
 <style lang="scss">
-<<<<<<< HEAD
-.progress-container {
-  margin: 1rem 0;
-}
-
-.progress-bar {
-  width: 100%;
-  background-color: #e0e0e0;
-  border-radius: 5px;
-  height: 1rem;
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  background-color: #4caf50;
-  transition: width 0.3s ease;
-}
-
-.n-card {
-  filter: drop-shadow(5px 6px 11px #515151);
-}
-
-h1 {
-  font-weight: 400;
-  font-family: 'Rammetto One', sans-serif;
-  background: rgb(103, 168, 244);
-  background: -moz-linear-gradient(
-    270deg,
-    rgba(103, 168, 244, 1) 0%,
-    rgba(66, 211, 146, 1) 78%
-  );
-  background: -webkit-linear-gradient(
-    270deg,
-    rgba(103, 168, 244, 1) 0%,
-    rgba(66, 211, 146, 1) 78%
-  );
-  background: linear-gradient(
-    270deg,
-    rgba(103, 168, 244, 1) 0%,
-    rgba(66, 211, 146, 1) 78%
-  );
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#67a8f4", endColorstr="#42d392", GradientType=1);
-
-  /* Text-specific properties */
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  /* Hides the actual color and shows only the gradient */
-}
-
-=======
->>>>>>> 3a1491cc7e37d3b8b3304baf646935c9fa3f2ac5
 .home-component {
   display: flex;
   justify-content: center;
