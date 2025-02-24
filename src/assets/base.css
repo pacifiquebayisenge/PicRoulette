@@ -60,6 +60,13 @@
 
 html {
   font-size: 10px;
+  font-size: calc(10px + 0.5vw); 
+}
+
+@media (max-width: 480px) {
+  html {
+    font-size: 12px; /* Slightly increase base size for smaller devices */
+  }
 }
 
 body {
