@@ -10,6 +10,12 @@
           <n-switch @update:value="handlePushNotifs" v-model:value="pushPermission" />
         </n-space>
       </div>
+      <div class="setting-item">
+        <p>Random player alert (test)</p>
+        <n-space align="center">
+          <n-switch @update:value="handlePushNotifs" v-model:value="pushPermission" />
+        </n-space>
+      </div>
     </div>
     <div class="info">
       <p>Pic Roulette v{{ appVersion }}</p>
@@ -157,12 +163,13 @@ export default {
   .content {
     width: 100%;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     margin: 2rem 0;
+    gap: 1rem;
 
     .setting-item {
       display: grid;
-      grid-template-columns: auto auto;
+      grid-template-columns: 2fr auto;
       align-items: center;
       gap: 2rem;
 
