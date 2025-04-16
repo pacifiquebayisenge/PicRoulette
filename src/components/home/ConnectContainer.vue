@@ -134,6 +134,7 @@ export default {
           this.isLoading = true;
           this.socket = socketService.connect(this.name);
         }
+
         this.reconnect = false;
 
         // Listen for user info from the server
@@ -142,6 +143,8 @@ export default {
           userService.setUser(data.name, data.id, data.emoji, data.imageCount);
           this.user = userService.getUser(); // Store user info received from the server
           this.userJoinedAlert(this.user);
+          localStorage.setItem("userId", this.user.id);
+          console.log(this.user);
           // this.$router.push('/game')
         });
 

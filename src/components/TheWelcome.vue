@@ -119,6 +119,7 @@ export default {
           userService.setUser(data.name, data.id, data.emoji, data.imageCount);
           this.user = userService.getUser(); // Store user info received from the server
           this.userJoinedAlert(this.user);
+          localStorage.setItem("userId", this.user.id);
           // this.$router.push('/game')
         });
 
