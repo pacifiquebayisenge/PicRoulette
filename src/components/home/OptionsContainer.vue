@@ -13,7 +13,7 @@
       <div class="setting-item">
         <p>Random player alert (test)</p>
         <n-space align="center">
-          <n-switch @update:value="handlePushNotifs" v-model:value="pushPermission" />
+          <n-switch />
         </n-space>
       </div>
     </div>

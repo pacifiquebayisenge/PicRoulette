@@ -8,6 +8,9 @@ class SocketService {
   connect(username) {
     if (!this.socket) {
       this.socket = io(import.meta.env.VITE_SERVER_URL, {
+        reconnection: true,
+  reconnectionAttempts: 10,
+  reconnectionDelay: 1000,
         query: { name: username }
       })
     }
