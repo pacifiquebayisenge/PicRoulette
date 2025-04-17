@@ -63,7 +63,6 @@ export default {
 
     // Listen for disconnect event
     this.socket.on("gameResults", (data) => {
-      // console.log(data)
       console.log(data);
       this.userList = data;
     });
