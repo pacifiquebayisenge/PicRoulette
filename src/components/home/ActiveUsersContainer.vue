@@ -16,7 +16,13 @@
           class="state-tag"
           :bordered="false"
           round
-          :type="user.state === 'Ready' ? 'success' : 'warning'"
+          :type="
+            user.state === 'Ready'
+              ? 'success'
+              : user.state === 'Waiting...'
+              ? 'warning'
+              : 'info'
+          "
         >
           {{ user.state }}
         </n-tag>

@@ -17,14 +17,12 @@
           />
           <n-button
             class="button-3D button-3D-colorfull"
-            success
             :bordered="false"
             @click="connectToSocket"
             >Connect</n-button
           >
           <n-button
             class="button-3D button-3D-colorfull"
-            success
             :bordered="false"
             @click="handleBack"
             >Options</n-button
@@ -119,7 +117,6 @@ export default {
           userService.setUser(data.name, data.id, data.emoji, data.imageCount);
           this.user = userService.getUser(); // Store user info received from the server
           this.userJoinedAlert(this.user);
-          localStorage.setItem("userId", this.user.id);
           // this.$router.push('/game')
         });
 

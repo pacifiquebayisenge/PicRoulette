@@ -163,6 +163,7 @@ export default {
         console.log("⚠ Already uploading, ignoring duplicate call");
         return;
       }
+      this.UploadState();
       this.uploading = true; // Prevent multiple calls
       this.serverUploadProgress = 0;
       this.successfulUploads = 0;
@@ -213,6 +214,10 @@ export default {
         id: this.user.id,
         imageCount: this.successfulUploads,
       });
+    },
+
+    UploadState() {
+      this.socket.emit("userUpload");
     },
   },
 
