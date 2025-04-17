@@ -128,7 +128,7 @@ export default {
       align-items: center;
 
       .page-title {
-        font-size: clamp(2rem, 4vw, 2.4rem); // Already in rem
+        font-size: clamp(2rem, 4vw, 2.4rem);
         text-align: center;
         margin-bottom: 1rem;
       }
