@@ -55,6 +55,7 @@ export default {
       currentImageobject: null,
       idReveal: false,
       score: 0,
+      timeoutId: null,
     };
   },
   mounted() {
@@ -66,6 +67,7 @@ export default {
       this.idReveal = false;
       // console.log(data);
       this.currentImageobject = data;
+      this.startInactivityTimeout();
     });
 
     this.socket.on("game-end", () => {
@@ -93,6 +95,8 @@ export default {
 
       vote === this.currentImageobject.id ? (this.score += 10) : null;
 
+      this.resetInactivityTimeout();
+
       setTimeout(() => {
         const response = {
           vote,
@@ -100,6 +104,24 @@ export default {
         };
         this.socket.emit("image-response", response);
       }, 1000);
+    },
+    // Function to start the timeout
+    startInactivityTimeout() {
+      this.timeoutId = setTimeout(() => {
+        // console.log("Voting timeout triggered.");
+        this.sendResponse("");
+
+        clearTimeout(this.timeoutId);
+        this.timeoutId = null;
+      }, 5000); // 5 seconds
+    },
+    // Function to cancel the timeout
+    resetInactivityTimeout() {
+      if (this.timeoutId) {
+        clearTimeout(this.timeoutId);
+        this.timeoutId = null;
+        console.log("User interacted, timeout canceled.");
+      }
     },
   },
   beforeUnmount() {
