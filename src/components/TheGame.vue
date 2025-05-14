@@ -113,7 +113,7 @@ export default {
 
         clearTimeout(this.timeoutId);
         this.timeoutId = null;
-      }, 5000); // 5 seconds
+      }, 10000); // 5 seconds
     },
     // Function to cancel the timeout
     resetInactivityTimeout() {
