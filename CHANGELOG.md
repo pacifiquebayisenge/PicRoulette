@@ -1,3 +1,10 @@
+## [1.5.3](https://github.com/pacifiquebayisenge/PicRoulette/compare/v1.5.2...v1.5.3) (2026-02-24)
+
+
+### Bug Fixes
+
+* semantic versioning ([4fd37a8](https://github.com/pacifiquebayisenge/PicRoulette/commit/4fd37a876a7fa48c804ac87ae1c08e0d3be338fc))
+
 ## [1.5.2](https://github.com/pacifiquebayisenge/PicRoulette/compare/v1.5.1...v1.5.2) (2026-02-24)
 
 
