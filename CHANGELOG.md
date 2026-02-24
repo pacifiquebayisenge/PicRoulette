@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/pacifiquebayisenge/PicRoulette/compare/v1.5.0...v1.5.1) (2026-02-24)
+
+
+### Bug Fixes
+
+* release token issue ([dc67440](https://github.com/pacifiquebayisenge/PicRoulette/commit/dc674400a2d998ace60d9adbd519b8e76f7933cc))
+
 # [1.5.0](https://github.com/pacifiquebayisenge/PicRoulette/compare/v1.4.1...v1.5.0) (2026-02-24)
 
 
