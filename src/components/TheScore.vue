@@ -62,6 +62,7 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
+  gameStore.clearUsers();
   socketStore.disconnect();
 });
 </script>

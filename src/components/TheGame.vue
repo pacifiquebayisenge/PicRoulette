@@ -113,8 +113,7 @@ const sendResponse = (vote) => {
   if (vote === img?.name) userStore.scoreIncrease();
 
   setTimeout(() => {
-    const response = { vote, ...userStore.user.value };
-    socketStore.socket.emit("userVote", response);
+    socketStore.socket.emit("userVote");
   }, 2000); // 2 sec
 };
 
