@@ -32,17 +32,6 @@ jobs:
         env:
           NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
 
-      - name: Debug npm config
-        run: |
-          echo "NPM_CONFIG_REGISTRY=$NPM_CONFIG_REGISTRY"
-          npm config get registry
-          npm config get userconfig
-          npm config list -l | sed -n '1,120p'
-          echo "---- repo .npmrc ----"
-          (test -f .npmrc && cat .npmrc) || echo "no .npmrc"
-          echo "---- home .npmrc ----"
-          (test -f ~/.npmrc && cat ~/.npmrc) || echo "no ~/.npmrc"
-
       # If you use npm:
       - name: Install dependencies
         run: npm ci --registry=https://registry.npmjs.org/ --no-audit --no-fund --loglevel=verbose
