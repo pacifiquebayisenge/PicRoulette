@@ -37,7 +37,6 @@
     <div v-if="uploadStore.isUploading">⬆️ Uploading...</div>
 
     <n-progress
-      v-if="uploadStore.isUploading"
       type="line"
       :percentage="uploadStore.uploadProgress"
       indicator-placement="inside"
