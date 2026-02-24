@@ -1,3 +1,30 @@
+# [1.5.0](https://github.com/pacifiquebayisenge/PicRoulette/compare/v1.4.1...v1.5.0) (2026-02-24)
+
+
+### Bug Fixes
+
+*  back to 15 ([e981c0f](https://github.com/pacifiquebayisenge/PicRoulette/commit/e981c0f7b651fd8428686c471d20cc3ac084aa75))
+* code clean up ([e76254f](https://github.com/pacifiquebayisenge/PicRoulette/commit/e76254fac7975c7470aceb78be172bb309d05e91))
+* collorfull buttons fix ([2077b35](https://github.com/pacifiquebayisenge/PicRoulette/commit/2077b355ce9f758ef48598c03cad87328420c1b2))
+* push notif + game end logic ([7298574](https://github.com/pacifiquebayisenge/PicRoulette/commit/72985740176d5bb3ef513949b8e94f933f5217c4))
+* semantic versioning ([3d3a1d1](https://github.com/pacifiquebayisenge/PicRoulette/commit/3d3a1d14538f1899c586c25129cb7be048f8af99))
+* semantic versioning ([7f6e503](https://github.com/pacifiquebayisenge/PicRoulette/commit/7f6e50354183a700043ad5ed0c08af2bb43bb1fd))
+* semantic versioning ([2e5164a](https://github.com/pacifiquebayisenge/PicRoulette/commit/2e5164a2c88d72289078ca65fc2a3ffa0f51eec5))
+* semantic versioning ([d435a0c](https://github.com/pacifiquebayisenge/PicRoulette/commit/d435a0c17f74706c9eba441c37eeeaa1f11b18a5))
+* semantic versioning ([463b0f0](https://github.com/pacifiquebayisenge/PicRoulette/commit/463b0f0772a00b4d359bbad40f3052afeb15202a))
+* semantic versioning ([84a8282](https://github.com/pacifiquebayisenge/PicRoulette/commit/84a8282344db1f035e3b75f1f6d2d9293f30fe94))
+* semantic versioning ([3fbd918](https://github.com/pacifiquebayisenge/PicRoulette/commit/3fbd918e3334583cadec6d4106c89349a064d735))
+* semantic versioning ([3265feb](https://github.com/pacifiquebayisenge/PicRoulette/commit/3265feb8b1c58b366735df16592c966a9227ddac))
+
+
+### Features
+
+* 10 secondes timeout to vote ([708793b](https://github.com/pacifiquebayisenge/PicRoulette/commit/708793b889713bb2c3dbe8d2cf707e5fad0d78e0))
+* 5 secondes timeout to vote ([d6645da](https://github.com/pacifiquebayisenge/PicRoulette/commit/d6645da2bd5200479e6d95d18a02d968df61b0af))
+* max 20 pictures ([afb152d](https://github.com/pacifiquebayisenge/PicRoulette/commit/afb152d053b1e4dc2aabde4aa11e998448be7bb2))
+* random player alert ([81941e9](https://github.com/pacifiquebayisenge/PicRoulette/commit/81941e9395675162f68b4a642abd6ae2e3173f38))
+* reconnection attempt ([00ec8c8](https://github.com/pacifiquebayisenge/PicRoulette/commit/00ec8c812196d43678d829bdbf7ac66f94424da2))
+
 ## [1.4.1](https://github.com/pacifiquebayisenge/PicRoulette/compare/v1.4.0...v1.4.1) (2025-02-13)
 
 
