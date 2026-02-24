@@ -19,11 +19,12 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "20"        
+          cache: "npm"
 
       # If you use npm:
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --no-audit --no-fund --loglevel=verbose
 
       # If you use yarn instead, swap the step above with:
       # - name: Install dependencies
