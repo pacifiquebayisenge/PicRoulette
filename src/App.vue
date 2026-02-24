@@ -8,5 +8,3 @@
     <RouterView />
   </n-notification-provider>
 </template>
-
-<style lang="scss"></style>

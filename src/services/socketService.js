@@ -1,19 +1,18 @@
+
 import { io } from 'socket.io-client'
 
 class SocketService {
-  constructor() {
-    this.socket = null
-  }
+  socket = null
 
   connect(username) {
-    if (!this.socket) {
-      this.socket = io(import.meta.env.VITE_SERVER_URL, {
-        reconnection: true,
-  reconnectionAttempts: 10,
-  reconnectionDelay: 1000,
-        query: { name: username }
-      })
-    }
+    if (this.socket) return this.socket
+
+    this.socket = io(import.meta.env.VITE_SERVER_URL, {
+      reconnection: true,
+      reconnectionAttempts: 10,
+      reconnectionDelay: 1000,
+      query: { name: username }
+    })
 
     return this.socket
   }
@@ -25,6 +24,18 @@ class SocketService {
     return this.socket
   }
 
+  emit(event, payload) {
+    this.getSocket().emit(event, payload)
+  }
+
+  on(event, callback) {
+    this.getSocket().on(event, callback)
+  }
+
+  off(event, callback) {
+    this.getSocket().off(event, callback)
+  }
+
   disconnect() {
     if (this.socket) {
       this.socket.disconnect()
@@ -33,5 +44,4 @@ class SocketService {
   }
 }
 
-const socketService = new SocketService()
-export default socketService
+export const socketService = new SocketService()

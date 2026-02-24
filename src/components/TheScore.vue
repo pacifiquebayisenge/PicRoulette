@@ -4,10 +4,10 @@
       <h1 class="page-title">Score</h1>
 
       <div class="score-results">
-        <div class="user-tag" v-for="(user, index) in userList" :key="index">
+        <div class="user-tag" v-for="(user, index) in gameStore.userList" :key="index">
           {{ `${index + 1}. ${user.emoji}` }}
           <n-ellipsis style="max-width: auto">
-            {{ user.name }}
+            {{ user.name.split("_")[0] }}
           </n-ellipsis>
           <n-tag
             :bordered="false"
@@ -33,57 +33,37 @@
   </n-card>
 </template>
 
-<script>
-import socketService from "@/services/socketService";
-import userService from "@/services/userService";
-
+<script setup>
+import { onMounted, onBeforeUnmount } from "vue";
+import { useRouter } from "vue-router";
 import confetti from "canvas-confetti";
+import { useGameStore } from "@/stores/game";
+import { useSocketStore } from "@/stores/socket";
 
-export default {
-  data() {
-    return {
-      socket: null,
-      user: null,
-      userList: [],
-      currentImageobject: null,
-    };
-  },
-  mounted() {
-    this.user = userService.getUser();
-    this.socket = socketService.getSocket();
+const router = useRouter();
+const gameStore = useGameStore();
+const socketStore = useSocketStore();
 
-    this.launchConfetti();
-
-    // Check if socket is connected
-    if (this.socket) {
-      console.log("Socket connected:", this.socket.id);
-    } else {
-      console.log("Socket is not connected.");
-    }
-
-    // Listen for disconnect event
-    this.socket.on("gameResults", (data) => {
-      console.log(data);
-      this.userList = data;
-    });
-  },
-  methods: {
-    launchConfetti() {
-      confetti({
-        particleCount: 200, // Number of particles
-        spread: 90, // Spread of the confetti
-        origin: { y: 0.6 }, // Launch point (y-axis: 0 = top, 1 = bottom)
-      });
-    },
-    restart() {
-      this.$router.push("/");
-    },
-  },
-  beforeUnmount() {
-    // Optional: Disconnect when the component is destroyed (if necessary)
-    // socketService.disconnect();
-  },
+const launchConfetti = () => {
+  confetti({
+    particleCount: 200,
+    spread: 90,
+    origin: { y: 0.6 },
+  });
 };
+
+const restart = () => {
+  gameStore.clearUsers();
+  router.push("/");
+};
+
+onMounted(() => {
+  launchConfetti();
+});
+
+onBeforeUnmount(() => {
+  socketStore.disconnect();
+});
 </script>
 
 <style lang="scss">

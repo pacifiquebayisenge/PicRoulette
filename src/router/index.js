@@ -1,53 +1,30 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import GameView from '@/views/GameView.vue'
-import userService from '@/services/userService'
 import ScoreView from '@/views/ScoreView.vue'
+import { useUserStore } from '@/stores/user'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
+
   routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: HomeView
-    },
-    {
-      path: '/game',
-      name: 'game',
-      component: GameView
-    },
-    {
-      path: '/score',
-      name: 'score',
-      component: ScoreView
-    },
+    { path: '/', name: 'home', component: HomeView },
+    { path: '/game', name: 'game', component: GameView, meta: { requiresAuth: true } },
+    { path: '/score', name: 'score', component: ScoreView, meta: { requiresAuth: true } },
     {
       path: '/about',
       name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../views/AboutView.vue')
     },
-    // Catch-all route for unknown paths
-    {
-      path: '/:pathMatch(.*)*',
-      redirect: '/'
-    }
+    { path: '/:pathMatch(.*)*', redirect: '/' }
   ]
 })
 
-// Add a global navigation guard
-router.beforeEach((to, from, next) => {
-  const isAuthenticated = userService.isAuthenticated()
+router.beforeEach((to) => {
+  const userStore = useUserStore()
 
-  if ((to.name === 'game' && !isAuthenticated) || (to.name === 'score' && !isAuthenticated)) {
-    // Redirect to home if trying to access /game without a valid user
-    next({ name: 'home' })
-  } else {
-    // Allow navigation
-    next()
+  if (to.meta.requiresAuth && !userStore.isAuthenticated) {
+    return { name: 'home' }
   }
 })
 

@@ -1,14 +1,16 @@
 <template>
-  <div v-if="activeUsers.length" class="active-users-container">
-    <h2>Active Users ({{ activeUsers.length }}):</h2>
-
+  <div class="active-users-container">
     <div>
-      <div v-for="(user, index) in activeUsers" :key="index" class="user-component">
+      <div
+        v-for="(user, index) in gameStore.userList"
+        :key="index"
+        class="user-component"
+      >
         <div>{{ user.emoji }}</div>
 
         <div>
           <n-ellipsis style="max-width: 12rem">
-            {{ user.name }}
+            {{ user.name.split("_")[0] }}
           </n-ellipsis>
         </div>
 
@@ -31,18 +33,10 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    activeUsers: {
-      typeof: {},
-      default: null,
-    },
-  },
-  data() {
-    return {};
-  },
-};
+<script setup>
+import { useGameStore } from "@/stores/game";
+
+const gameStore = useGameStore();
 </script>
 
 <style lang="scss">

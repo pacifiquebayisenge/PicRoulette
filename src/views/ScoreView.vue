@@ -1,11 +1,9 @@
 <script setup>
-import TheScore from '@/components/TheScore.vue';
-
-
+import TheScore from "@/components/TheScore.vue";
 </script>
 
 <template>
-    <main>
-        <TheScore />
-    </main>
+  <main>
+    <TheScore />
+  </main>
 </template>
