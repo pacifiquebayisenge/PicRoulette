@@ -86,14 +86,14 @@ export const useSocketStore = defineStore('socket', {
 
             // Listen for game result event
             this.socket.on("gameEnd", () => {
-                console.log(userStore.user)
                 this.socket.emit('score', userStore.user)
             });
 
             // Listen for game result event
             this.socket.on("gameResults", (data) => {
-                console.log(data);
-                this.userList = data;
+
+                gameStore.userList = data
+
                 router.push('/score')
             });
 
