@@ -1,57 +1,48 @@
-name: Release
+name: Version bump
+
 on:
   push:
     branches:
-      - main
-  pull_request:
-    branches:
-      - main
+      - dev
 
 jobs:
-  check-commit:
-    runs-on: ubuntu-latest
-    outputs:
-      should_release: ${{ steps.check.outputs.match }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - id: check
-        run: |
-          if [[ ${{ github.event_name }} == 'pull_request' ]]; then
-            TITLE="${{ github.event.pull_request.title }}"
-          else
-            TITLE=$(git log -1 --pretty=%B)
-          fi
-          if [[ $TITLE =~ ^(fix:|feat:|feat!:|BREAKING CHANGE:) ]]; then
-            echo "match=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "match=false" >> "$GITHUB_OUTPUT"
-          fi
-
   release:
-    needs: check-commit
-    if: needs.check-commit.outputs.should_release == 'true'
-    name: Release
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
         with:
-          persist-credentials: false  # Important for semantic-release
-      - name: Set up Node.js
+          fetch-depth: 0
+          # keep default persist-credentials: true so semantic-release can push
+
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"        
+          registry-url: "https://registry.npmjs.org"
+          cache: "npm"
+
+      - name: Force npmjs registry (hard)
+        run: |
+          rm -f ~/.npmrc
+          npm config delete registry || true
+          npm config set registry https://registry.npmjs.org/
+          echo "registry now => $(npm config get registry)"
+        env:
+          NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
+
+      # If you use npm:
       - name: Install dependencies
-        run: |
-          npm install -g yarn
-          yarn install
-      - name: Configure git user
-        run: |
-          git config --global user.name 'GitHub Actions Bot'
-          git config --global user.email '<>'
+        run: npm ci --registry=https://registry.npmjs.org/ --no-audit --no-fund --loglevel=verbose
+        env:
+          NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
+
+      # If you use yarn instead, swap the step above with:
+      # - name: Install dependencies
+      #   run: yarn install --frozen-lockfile
+
       - name: Run semantic-release
         run: npx semantic-release
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
