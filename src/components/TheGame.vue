@@ -2,12 +2,12 @@
   <div class="game-page">
     <n-card class="game-card">
       <div class="game-container">
-        <h1 class="page-title">Game</h1>
+        <h1 class="page-title">Pic Roulette</h1>
 
         <div class="image-container">
           <div class="image-wrapper">
             <img
-              :src="currentImageobject?.file?.url || '/empty_space.gif'"
+              :src="gameStore.currentImage?.file?.url || '/empty_space.gif'"
               alt="Game Image"
               class="responsive-image"
             />
@@ -19,116 +19,117 @@
     <div class="voting-btns">
       <n-button
         class="button-3D button-3D-colorfull"
-        v-for="(user, index) in userList"
+        v-for="(user, index) in gameStore.userList"
         :key="index"
         secondary
         :ref="user.id"
         :id="user.id"
         :type="
           idReveal
-            ? user?.id === currentImageobject?.id
+            ? user?.name === gameStore.currentImage?.name
               ? 'success'
               : 'error'
             : 'default'
         "
-        @click="sendResponse(user.id)"
+        @click="sendResponse(user.name)"
       >
         <n-ellipsis style="max-width: 10rem">
-          {{ `${user.emoji} ${user.name}` }}
+          {{ `${user.emoji} ${user.name.split("_")[0]}` }}
         </n-ellipsis>
       </n-button>
     </div>
   </div>
 </template>
 
-<script>
-import gameService from "@/services/gameService";
-import socketService from "@/services/socketService";
-import userService from "@/services/userService";
+<script setup>
+import { ref, onBeforeUnmount, watch } from "vue";
+import { useUserStore } from "@/stores/user";
+import { useGameStore } from "@/stores/game";
+import { useSocketStore } from "@/stores/socket";
 
-export default {
-  data() {
-    return {
-      socket: null,
-      user: null,
-      userList: [],
-      currentImageobject: null,
-      idReveal: false,
-      score: 0,
-      timeoutId: null,
-    };
-  },
-  mounted() {
-    this.user = userService.getUser();
-    this.socket = socketService.getSocket();
-    this.userList = gameService.getUserList();
+// state
 
-    this.socket.on("game-image", (data) => {
-      this.idReveal = false;
-      // console.log(data);
-      this.currentImageobject = data;
-      this.startInactivityTimeout();
-    });
+const userStore = useUserStore();
+const gameStore = useGameStore();
+const socketStore = useSocketStore();
 
-    this.socket.on("game-end", () => {
-      this.socket.emit("score", { ...this.user, score: this.score });
-      this.$router.push("/score");
-    });
+// TODO sent score to server for loss prevention
 
-    // Check if socket is connected
-    if (this.socket) {
-      console.log("Socket connected:", this.socket.id);
-    } else {
-      console.log("Socket is not connected.");
-    }
-  },
-  methods: {
-    sendResponse(vote) {
-      if (this.idReveal) return;
-      this.idReveal = true;
+const idReveal = ref(false);
+let timeoutId = null;
 
-      const rightBtn = this.$refs[this.currentImageobject.id];
+// template refs (for dynamic refs like :ref="el => setBtnRef(id, el)")
+// const btnRefs = new Map();
 
-      if (rightBtn && rightBtn.$el) {
-        rightBtn.$el.scrollIntoView(false);
-      }
+// const setBtnRef = (id, el) => {
+//   if (el) btnRefs.set(id, el);
+//   else btnRefs.delete(id);
+// };
 
-      vote === this.currentImageobject.id ? (this.score += 10) : null;
+// start (restart) timer
 
-      this.resetInactivityTimeout();
+const startInactivityTimeout = () => {
+  stopInactivityTimeout(); // stop prevoius timer
 
-      setTimeout(() => {
-        const response = {
-          vote,
-          ...this.user,
-        };
-        this.socket.emit("image-response", response);
-      }, 1000);
-    },
-    // Function to start the timeout
-    startInactivityTimeout() {
-      this.timeoutId = setTimeout(() => {
-        // console.log("Voting timeout triggered.");
-        this.sendResponse("");
+  idReveal.value = false;
 
-        clearTimeout(this.timeoutId);
-        this.timeoutId = null;
-      }, 25000); // 25 seconds
-    },
-    // Function to cancel the timeout
-    resetInactivityTimeout() {
-      if (this.timeoutId) {
-        clearTimeout(this.timeoutId);
-        this.timeoutId = null;
-        console.log("User interacted, timeout canceled.");
-      }
-    },
-  },
-  beforeUnmount() {
-    // Optional: Disconnect when the component is destroyed (if necessary)
-    // socketService.disconnect();
-  },
+  timeoutId = setTimeout(() => {
+    // user responded too late
+    sendResponse("");
+  }, 5000); // 5 sec
 };
+
+// Stop timer
+const stopInactivityTimeout = () => {
+  if (timeoutId) {
+    clearTimeout(timeoutId);
+    timeoutId = null;
+  }
+};
+
+// // Reset timer (stop + restart)
+// const resetInactivityTimeout = () => {
+//   stopInactivityTimeout();
+//   startInactivityTimeout();
+// };
+
+// methods
+const sendResponse = (vote) => {
+  stopInactivityTimeout();
+
+  if (idReveal.value) return;
+
+  idReveal.value = true;
+
+  const img = gameStore.currentImage;
+
+  // if (img.name) {
+
+  //   const rightBtn = btnRefs.get(img.id); // this is a component instance or an element (depends on how you bind ref)
+  //   const el = rightBtn?.$el ?? rightBtn; // supports both component refs and element refs
+  //   if (el?.scrollIntoView) el.scrollIntoView(false);
+  // }
+
+  if (vote === img?.name) userStore.scoreIncrease();
+
+  setTimeout(() => {
+    const response = { vote, ...userStore.user.value };
+    socketStore.socket.emit("userVote", response);
+  }, 2000); // 2 sec
+};
+
+watch(
+  () => gameStore.currentImage,
+  () => {
+    startInactivityTimeout();
+  },
+  { deep: true }
+);
+
+//  Cleanup
+onBeforeUnmount(() => {
+  stopInactivityTimeout();
+});
 </script>
 
 <style lang="scss">
