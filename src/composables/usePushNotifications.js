@@ -24,6 +24,8 @@ export function usePushNotifications() {
 
         if (pushPermission.value === "granted") {
             console.log("Notifications already permitted")
+
+            await subToPushNotifs()
             return
         }
 

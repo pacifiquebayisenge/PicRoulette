@@ -2,7 +2,7 @@
   <div class="images-container">
     <n-upload
       :disabled="isDisabled"
-      :min="5"
+      :min="2"
       :max="getMaxImgCount"
       :multiple="true"
       :show-file-list="false"

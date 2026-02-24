@@ -37,47 +37,30 @@ self.addEventListener('message', (event) => {
 
 // Add push event listener
 self.addEventListener('push', (event) => {
-  if (!event.data) {
-    console.log('Push event but no data');
-    return;
+  let notification = { title: 'Pic Roulette', body: '' };
+
+  if (event.data) {
+    try {
+      notification = event.data.json();
+    } catch {
+      notification = { title: 'Pic Roulette', body: event.data.text() };
+    }
   }
 
-  // console.log(event)
-  // console.log(event.data.json())
-  // Try to parse the data as JSON first
-  let notification;
-  try {
-    notification = event.data.json();
-  } catch (e) {
-    // If JSON parsing fails, use text
-    notification = {
-      title: 'Pic Roulette', // Default to 'pic roulette' title
-      body: event.data.text(),
-    };
-  }
-
-  // Define notification options
   const options = {
-    body:  notification.body,
-    icon: '/pwa-192x192.png', // Path to your app icon
-    badge: '/pwa-192x192.png', // Path to your app badge
-    vibrate: [100, 50, 100], // Vibration pattern
+    body: notification.body || '',
+    icon: '/pwa-192x192.png',
+    badge: '/pwa-192x192.png',
+    vibrate: [100, 50, 100],
     data: {
       dateOfArrival: Date.now(),
-      primaryKey: 1,
-      ...notification.data
+      ...((notification.data && typeof notification.data === 'object') ? notification.data : {}),
     },
-    actions: notification.actions || []
+    actions: notification.actions || [],
   };
 
-  
-
-  // Show the notification with the specified title
   event.waitUntil(
-    self.registration.showNotification(notification.title || 'Pic Roulette', {
-      ...options,
-      body: notification.body // Keep original body
-    })
+    self.registration.showNotification(notification.title || 'Pic Roulette', options)
   );
 });
 

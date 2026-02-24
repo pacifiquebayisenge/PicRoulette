@@ -29,7 +29,8 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,ico,png,svg}']
       },
       devOptions: {
-        enabled: true // Enable PWA in development
+        enabled: true, // Enable PWA in development
+        type: 'module',
       },
       manifest: {
         name: 'Pic Roulette',

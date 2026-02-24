@@ -42,6 +42,7 @@ export async function subToPushNotifs() {
     }
 
     const data = await response.json()
+
     localStorage.setItem('push_subscription', JSON.stringify(data.subscription))
     return data
   } catch (e) {
