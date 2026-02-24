@@ -9,7 +9,7 @@ import { version } from './package.json';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/', 
+  base: '/',
   plugins: [
     vue(),
     VitePWA({
@@ -20,7 +20,8 @@ export default defineConfig({
       publicDir: 'public',
       injectManifest: {
         swSrc: 'src/service-worker.js', // Source service worker file
-        swDest: 'dist/service-worker.js' // Destination service worker file
+        swDest: 'dist/service-worker.js', // Destination service worker file
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024 // 5 MiB
       },
       workbox: {
         cleanupOutdatedCaches: true,
@@ -50,7 +51,7 @@ export default defineConfig({
         ]
       }
     }),
-    
+
   ],
   define: {
     __APP_VERSION__: JSON.stringify(version)
