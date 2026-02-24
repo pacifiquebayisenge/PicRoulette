@@ -166,8 +166,6 @@ function fullRoomAlert(data) {
 function handleBack() {
   showSettings.value = !showSettings.value;
 }
-
-// If your template needs these, they're available automatically in <script setup>
 </script>
 
 <style lang="scss">

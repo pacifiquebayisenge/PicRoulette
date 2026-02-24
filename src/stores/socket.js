@@ -96,6 +96,7 @@ export const useSocketStore = defineStore('socket', {
 
                 console.log(data)
                 gameStore.userList = data
+
                 router.push('/score')
             });
 
