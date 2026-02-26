@@ -7,7 +7,7 @@ import { useUserStore } from "./user"
 
 export const useUploadStore = defineStore("upload", {
     state: () => ({
-        total: MAX_IMAGE_UPLOAD,
+        total: 0,
 
         // Conversion state
         isConverting: false,
@@ -46,6 +46,13 @@ export const useUploadStore = defineStore("upload", {
 
             this.error = null
         },
+        resetUploadCount() {
+            this.uploadedCount = 0
+        },
+
+        setTotal(totalImages = MAX_IMAGE_UPLOAD) {
+            this.total = totalImages
+        },
 
         async convertToWebpFile(inputFile, { maxWidth = 800, maxHeight = 800, quality = 0.7 } = {}) {
             const webpBlob = await compressAndConvertToWebP(inputFile, {
@@ -79,13 +86,18 @@ export const useUploadStore = defineStore("upload", {
             const path = `public/${tag}:${id}:${safeName}`
 
             const { error } = await supabase.storage
-                .from("images")
+                .from(import.meta.env.VITE_STORAGE_BUCKET)
                 .upload(path, webpFile, {
                     contentType: webpFile.type,
                     upsert: true,
                 })
 
             if (error) throw error
+
+
+
+
+
             return path
         },
 
@@ -101,7 +113,9 @@ export const useUploadStore = defineStore("upload", {
                 })
                 paths.push(path)
                 this.uploadedCount++
+
             }
+
 
             this.isUploading = false
             return paths
@@ -112,6 +126,7 @@ export const useUploadStore = defineStore("upload", {
             const userStore = useUserStore()
             this.reset()
             this.error = null
+
 
             try {
                 const converted = await this.convertAll(image, convertOptions)

@@ -37,6 +37,7 @@
       </div>
 
       <!-- <OptionsContainer v-if="showSettings" @back-clicked="handleBack" /> -->
+      <p class="app-version">v{{ appVersion }}</p>
     </n-card>
 
     <ActiveUsersContainer />
@@ -52,6 +53,7 @@ import ImagesContainer from "./ImagesContainer.vue";
 import ActiveUsersContainer from "./ActiveUsersContainer.vue";
 import { useUploadStore } from "@/stores/upload";
 import { usePushNotifications } from "@/composables/usePushNotifications";
+import appVersion from "@/utils/version";
 
 const { checkPermission } = usePushNotifications();
 
@@ -85,7 +87,6 @@ onMounted(() => {
 onBeforeUnmount(() => {
   // Clean up the socket connection (if you decide to)
   // if (socket.value) socket.value.disconnect()
-  uploadStore.uploadedCount = 0;
 });
 
 // ---------- methods ----------
@@ -193,6 +194,11 @@ function handleBack() {
     button span {
       font-weight: bolder;
     }
+  }
+
+  .app-version {
+    text-align: center;
+    color: #dcdcdc;
   }
 
   .chat-container {
