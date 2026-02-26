@@ -1,3 +1,17 @@
+## [1.5.7](https://github.com/pacifiquebayisenge/PicRoulette/compare/v1.5.6...v1.5.7) (2026-02-26)
+
+
+### Bug Fixes
+
+* score page ([d6917b7](https://github.com/pacifiquebayisenge/PicRoulette/commit/d6917b79a327fa1ba2878014d9bfa78d58cae8dd))
+
+## [1.5.6](https://github.com/pacifiquebayisenge/PicRoulette/compare/v1.5.5...v1.5.6) (2026-02-26)
+
+
+### Bug Fixes
+
+* score page navigation + setuserlist faulty assignment ([64059e9](https://github.com/pacifiquebayisenge/PicRoulette/commit/64059e98c923871773db83edc322366101608f44))
+
 ## [1.5.5](https://github.com/pacifiquebayisenge/PicRoulette/compare/v1.5.4...v1.5.5) (2026-02-26)
 
 

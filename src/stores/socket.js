@@ -90,16 +90,17 @@ export const useSocketStore = defineStore('socket', {
                 // sent user score to server
 
                 this.socket.emit('score', userStore.user)
+
             });
 
             // Listen for game result event
             this.socket.on("gameResults", (data) => {
 
                 console.log(data)
-
-                gameStore.setUserList = data
-
+                gameStore.setUserList(data)
                 router.push('/score')
+
+
             });
 
             this.socket.on('disconnect', () => {
