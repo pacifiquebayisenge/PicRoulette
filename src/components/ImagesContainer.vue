@@ -26,31 +26,35 @@
     <div v-if="uploadStore.isConverting">🍲 Cooking the images 🍳</div>
 
     <n-progress
-      type="line"
       v-if="uploadStore.isConverting"
+      type="line"
       :percentage="uploadStore.conversionProgress"
       :show-indicator="false"
+      color="#42d392"
       processing
     />
 
     <!-- Upload -->
-    <div v-if="uploadStore.isUploading">⬆️ Uploading...</div>
+    <div v-if="uploadStore.isUploading">⚡ waking up the robot 🤖</div>
 
     <n-progress
+      v-if="uploadStore.isUploading"
       type="line"
       :percentage="uploadStore.uploadProgress"
-      indicator-placement="inside"
+      :show-indicator="false"
+      color="#67a8f3"
       processing
     />
 
     <!-- Optional overall progress -->
-    <!-- <n-progress
-      v-if="uploadStore.isConverting || uploadStore.isUploading"
+    <n-progress
+      v-if="uploadStore.totalProgress"
       type="line"
+      class="colorfull-n-progress"
       :percentage="uploadStore.totalProgress"
-      :show-indicator="false"
+      indicator-placement="inside"
       processing
-    /> -->
+    />
 
     <!-- <div>Converted {{ uploadStore.convertedCount }} / {{ uploadStore.total }}</div> -->
     <div v-if="uploadStore.uploadedCount">
@@ -94,6 +98,8 @@ const isDisabled = computed(() => {
 async function handleImageUpload(data) {
   if (!props.username) return;
 
+  uploadStore.setTotal(data.fileList.length);
+
   // way to combine the image with the user during the game
   const tag = `${props.username}_${uniqueSuffix}`;
 
@@ -116,7 +122,6 @@ async function handleImageUpload(data) {
 }
 
 function readyState() {
-  console.log("eee");
   socketStore.socket.emit("userReady", userStore.user);
 }
 </script>

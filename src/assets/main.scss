@@ -346,6 +346,14 @@ main {
   }
 }
 
+.colorfull-n-progress .n-progress-graph-line-fill {
+  background: linear-gradient(
+    270deg,
+    rgba(103, 168, 244, 1) 0%,
+    rgba(66, 211, 146, 1) 78%
+  ) !important;
+}
+
 @media (hover: hover) {
   a:hover {
     background-color: hsla(160, 100%, 37%, 0.2);

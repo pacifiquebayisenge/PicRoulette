@@ -39,10 +39,12 @@ import { useRouter } from "vue-router";
 import confetti from "canvas-confetti";
 import { useGameStore } from "@/stores/game";
 import { useSocketStore } from "@/stores/socket";
+import { useUploadStore } from "@/stores/upload";
 
 const router = useRouter();
 const gameStore = useGameStore();
 const socketStore = useSocketStore();
+const uploadSotre = useUploadStore();
 
 const launchConfetti = () => {
   confetti({
@@ -63,6 +65,8 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   gameStore.clearUsers();
+  uploadSotre.reset();
+  uploadSotre.resetUploadCount();
   socketStore.disconnect();
 });
 </script>

@@ -76,7 +76,8 @@ export const useSocketStore = defineStore('socket', {
 
             // Listen for the next image to display to all users 
             this.socket.on("nextImage", (data) => {
-                gameStore.currentImage = data
+
+                gameStore.setCurrentImage(data)
             });
 
             // // Listen for comments from the server
@@ -95,7 +96,8 @@ export const useSocketStore = defineStore('socket', {
             this.socket.on("gameResults", (data) => {
 
                 console.log(data)
-                gameStore.userList = data
+
+                gameStore.setUserList = data
 
                 router.push('/score')
             });
