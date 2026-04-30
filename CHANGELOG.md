@@ -1,3 +1,10 @@
+## [1.7.1](https://github.com/pacifiquebayisenge/PicRoulette/compare/v1.7.0...v1.7.1) (2026-04-30)
+
+
+### Bug Fixes
+
+* server health request fix ([03935ff](https://github.com/pacifiquebayisenge/PicRoulette/commit/03935ff7f2a227da946aed90661df573c7a12e3d))
+
 # [1.7.0](https://github.com/pacifiquebayisenge/PicRoulette/compare/v1.6.0...v1.7.0) (2026-04-30)
 
 

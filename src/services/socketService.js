@@ -1,7 +1,7 @@
 import { io } from 'socket.io-client'
 
 export async function wakeUpServer() {
-  return fetch(import.meta.env.VITE_SERVER_URL + '/health', {
+  return fetch(import.meta.env.VITE_SERVER_URL + 'health', {
     method: 'GET',
     cache: 'no-store'
   })
