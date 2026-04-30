@@ -15,10 +15,12 @@
 
   <n-button
     v-if="socketStore.socket && uploadStore.uploadedCount"
-    class="button-3D button-3D--water"
+    :class="['button-3D', socketStore.awake ? 'button-3D--water' : '']"
     :bordered="false"
+    :disabled="!socketStore.awake"
+    :loading="!socketStore.awake"
     @click="readyState"
-    >Ready</n-button
+    >{{ readyLabel }}</n-button
   >
 
   <div class="progress-container">
@@ -94,6 +96,8 @@ const isDisabled = computed(() => {
 
   return isBusy || reachedLimit || missingInput;
 });
+
+const readyLabel = computed(() => (socketStore.awake ? "Ready ?" : ""));
 
 async function handleImageUpload(data) {
   if (!props.username) return;

@@ -46,31 +46,32 @@
 
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, h } from "vue";
+import { usePushNotifications } from "@/composables/usePushNotifications";
 import { useNotification } from "naive-ui";
 import { namelist } from "@/data/names";
+import appVersion from "@/utils/version";
+import { useUploadStore } from "@/stores/upload";
+import { useSocketStore } from "@/stores/socket";
+
 import UserAlert from "./alerts/UserAlert.vue";
 import ImagesContainer from "./ImagesContainer.vue";
 import ActiveUsersContainer from "./ActiveUsersContainer.vue";
-import { useUploadStore } from "@/stores/upload";
-import { usePushNotifications } from "@/composables/usePushNotifications";
-import appVersion from "@/utils/version";
+
+import { useWebHaptics } from "web-haptics/vue";
 
 const { checkPermission } = usePushNotifications();
 
 // const socket = ref(null);
 const name = ref("");
-// const comment = ref("");
-// const comments = ref([]);
 
-const showSettings = ref(false);
-
-// keep namelist available
 const names = namelist;
 
 // Naive UI notification instance
 const notification = useNotification();
 
 const uploadStore = useUploadStore();
+const socketStore = useSocketStore();
+const { trigger } = useWebHaptics();
 
 // ---------- computed ----------
 const getPlaceholder = computed(() => {
@@ -82,51 +83,20 @@ const getPlaceholder = computed(() => {
 onMounted(() => {
   // Don't request immediately, just check current status
   checkPermission();
+  socketStore.wakeUp();
+
+  trigger([
+    { duration: 60 },
+    { delay: 60, duration: 200, intensity: 1 },
+    { delay: 60, duration: 200, intensity: 1 },
+    { delay: 60, duration: 200, intensity: 1 },
+  ]);
 });
 
 onBeforeUnmount(() => {
   // Clean up the socket connection (if you decide to)
   // if (socket.value) socket.value.disconnect()
 });
-
-// ---------- methods ----------
-
-// function sendComment() {
-//   if (!comment.value || !socket.value || !user.value) return;
-
-//   socket.value.emit("comment", {
-//     id: user.value.id,
-//     name: user.value.name,
-//     emoji: user.value.emoji,
-//     message: comment.value,
-//   });
-
-//   comment.value = "";
-// }
-
-function userJoinedAlert(joinedUser) {
-  notification.create({
-    content: () =>
-      h(UserAlert, {
-        user: joinedUser,
-        alertType: "success",
-      }),
-    duration: 3000,
-    closable: false,
-  });
-}
-
-function userLeftAlert(leftUser) {
-  notification.create({
-    content: () =>
-      h(UserAlert, {
-        user: leftUser,
-        alertType: "error",
-      }),
-    duration: 3000,
-    closable: false,
-  });
-}
 
 function minImagesRequired() {
   notification.create({
@@ -162,10 +132,6 @@ function fullRoomAlert(data) {
     duration: 3000,
     closable: false,
   });
-}
-
-function handleBack() {
-  showSettings.value = !showSettings.value;
 }
 </script>
 

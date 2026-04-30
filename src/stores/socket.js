@@ -1,128 +1,138 @@
-
 import { defineStore } from 'pinia'
-import { socketService } from '@/services/socketService'
+import { socketService, wakeUpServer } from '@/services/socketService'
 import { useUserStore } from '@/stores/user'
 import { useGameStore } from '@/stores/game'
-import router from "@/router"
+import router from '@/router'
 
 export const useSocketStore = defineStore('socket', {
+  state: () => ({
+    socket: null,
+    listenersBound: false,
+    connected: false,
+    messages: [],
+    awake: false,
+    wakingUp: false
+  }),
 
-    state: () => ({
-        socket: null,
-        listenersBound: false,
-        connected: false,
-        messages: []
+  actions: {
+    async wakeUp() {
+      if (this.awake || this.wakingUp) return
 
-    }),
+      this.wakingUp = true
 
-    actions: {
-        connect(username) {
-            if (!username) return
+      try {
+        console.log('Waking up server')
+        const response = await wakeUpServer()
 
-            this.socket = socketService.connect(username)
+        this.awake = response.ok
+      } catch (error) {
+        console.error('Wake-up failed:', error)
 
-            if (!this.listenersBound) {
-                this.bindListeners()
-                this.listenersBound = true
-            }
+        this.awake = false
+      } finally {
+        this.wakingUp = false
+      }
+    },
+    connect(username) {
+      if (!username) return
 
-            return this.socket
-        },
+      this.socket = socketService.connect(username)
 
+      if (!this.listenersBound) {
+        this.bindListeners()
+        this.listenersBound = true
+      }
 
-        sendMessage(message) {
-            socketService.emit('message', message)
-        },
+      return this.socket
+    },
 
-        bindListeners() {
-            const userStore = useUserStore()
-            const gameStore = useGameStore()
+    sendMessage(message) {
+      socketService.emit('message', message)
+    },
 
-            // Listen for invalid name error from the server
-            this.socket.on("invalid", (data) => {
-                console.log(data)
-            });
+    bindListeners() {
+      const userStore = useUserStore()
+      const gameStore = useGameStore()
 
-            // Listen for game already started state from the server
-            this.socket.on("gameAlreadyStarted", (data) => {
-                console.log(data)
-            });
+      // Listen for invalid name error from the server
+      this.socket.on('invalid', (data) => {
+        console.log(data)
+      })
 
-            // Listen for room full state from the server
-            this.socket.on("roomFull", (data) => {
-                console.log(data)
-            });
+      // Listen for game already started state from the server
+      this.socket.on('gameAlreadyStarted', (data) => {
+        console.log(data)
+      })
 
-            // Listen for user info from the server
-            this.socket.on("userInfo", (data) => {
-                userStore.setUser({
-                    id: data.id,
-                    name: data.name,
-                    emoji: data.emoji,
-                    state: data.state,
-                    score: data.score,
-                })
-            });
+      // Listen for room full state from the server
+      this.socket.on('roomFull', (data) => {
+        console.log(data)
+      })
 
-            // Listen for active users update from the server
-            this.socket.on("activeUsers", (data) => {
-                gameStore.setUserList(data.users)
-            });
+      // Listen for user info from the server
+      this.socket.on('userInfo', (data) => {
+        userStore.setUser({
+          id: data.id,
+          name: data.name,
+          emoji: data.emoji,
+          state: data.state,
+          score: data.score
+        })
+      })
 
-            // Listen for all user ready state from server
-            this.socket.on("allReady", () => {
-                router.push("/game");
-            });
+      // Listen for active users update from the server
+      this.socket.on('activeUsers', (data) => {
+        gameStore.setUserList(data.users)
+      })
 
-            // Listen for the next image to display to all users 
-            this.socket.on("nextImage", (data) => {
+      // Listen for all user ready state from server
+      this.socket.on('allReady', () => {
+        router.push('/game')
+      })
 
-                gameStore.setCurrentImage(data)
-            });
+      // Listen for the next image to display to all users
+      this.socket.on('nextImage', (data) => {
+        gameStore.setCurrentImage(data)
+      })
 
-            // // Listen for comments from the server
-            // this.socket.on("comment", async (data) => {
-            //     console.log('New comment: ', data)
-            // });
+      // // Listen for comments from the server
+      // this.socket.on("comment", async (data) => {
+      //     console.log('New comment: ', data)
+      // });
 
-            // Listen for game end event
-            this.socket.on("gameEnd", () => {
-                // sent user score to server
+      // Listen for game end event
+      this.socket.on('gameEnd', () => {
+        // sent user score to server
 
-                this.socket.emit('score', userStore.user)
+        this.socket.emit('score', userStore.user)
+      })
 
-            });
+      // Listen for game result event
+      this.socket.on('gameResults', (data) => {
+        console.log(data)
+        gameStore.setUserList(data)
+        router.push('/score')
+      })
 
-            // Listen for game result event
-            this.socket.on("gameResults", (data) => {
+      this.socket.on('disconnect', () => {
+        this.connected = false
+      })
 
-                console.log(data)
-                gameStore.setUserList(data)
-                router.push('/score')
+      this.socket.on('disconnected', (data) => {
+        console.log('Disconnected from server ', data)
 
+        const index = gameStore.userList.findIndex((u) => u.id === data.id)
 
-            });
+        if (index === -1) return null
 
-            this.socket.on('disconnect', () => {
-                this.connected = false
-            })
+        gameStore.userList.splice(index, 1)
+      })
+    },
 
-            this.socket.on("disconnected", (data) => {
-                console.log("Disconnected from server ", data);
-
-
-                const index = gameStore.userList.findIndex((u) => u.id === data.id);
-
-                if (index === -1) return null;
-
-                gameStore.userList.splice(index, 1);
-            });
-        },
-
-        disconnect() {
-            this.socket.disconnect()
-            this.connected = false
-            this.messages = []
-        }
+    disconnect() {
+      this.socket.disconnect()
+      this.connected = false
+      this.messages = []
     }
+  }
 })
