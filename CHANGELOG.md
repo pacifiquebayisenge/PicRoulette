@@ -1,3 +1,12 @@
+# [1.7.0](https://github.com/pacifiquebayisenge/PicRoulette/compare/v1.6.0...v1.7.0) (2026-04-30)
+
+
+### Features
+
+* haptic feedback ([53fddbf](https://github.com/pacifiquebayisenge/PicRoulette/commit/53fddbf530c9fe77467b16b9a138a5331a9ebc7b))
+* haptic feedback ([c3e7e3e](https://github.com/pacifiquebayisenge/PicRoulette/commit/c3e7e3e33888c3b1a1565ffe16cc701eab04a7cb))
+* haptic feedback ([24241d6](https://github.com/pacifiquebayisenge/PicRoulette/commit/24241d6a3c2e9c493448434b87fa7a7b93808914))
+
 # [1.6.0](https://github.com/pacifiquebayisenge/PicRoulette/compare/v1.5.7...v1.6.0) (2026-04-30)
 
 
