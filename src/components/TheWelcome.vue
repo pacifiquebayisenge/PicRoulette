@@ -57,6 +57,8 @@ import UserAlert from "./alerts/UserAlert.vue";
 import ImagesContainer from "./ImagesContainer.vue";
 import ActiveUsersContainer from "./ActiveUsersContainer.vue";
 
+import { useWebHaptics } from "web-haptics/vue";
+
 const { checkPermission } = usePushNotifications();
 
 // const socket = ref(null);
@@ -69,6 +71,7 @@ const notification = useNotification();
 
 const uploadStore = useUploadStore();
 const socketStore = useSocketStore();
+const { trigger } = useWebHaptics();
 
 // ---------- computed ----------
 const getPlaceholder = computed(() => {
@@ -81,6 +84,13 @@ onMounted(() => {
   // Don't request immediately, just check current status
   checkPermission();
   socketStore.wakeUp();
+
+  trigger([
+    { duration: 60 },
+    { delay: 60, duration: 200, intensity: 1 },
+    { delay: 60, duration: 200, intensity: 1 },
+    { delay: 60, duration: 200, intensity: 1 },
+  ]);
 });
 
 onBeforeUnmount(() => {

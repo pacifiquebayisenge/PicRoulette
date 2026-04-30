@@ -20,9 +20,8 @@
     :disabled="!socketStore.awake"
     :loading="!socketStore.awake"
     @click="readyState"
+    >{{ readyLabel }}</n-button
   >
-    {{ readyLabel }}
-  </n-button>
 
   <div class="progress-container">
     <!-- Conversion -->

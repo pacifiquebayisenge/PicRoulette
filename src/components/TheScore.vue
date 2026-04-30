@@ -40,11 +40,13 @@ import confetti from "canvas-confetti";
 import { useGameStore } from "@/stores/game";
 import { useSocketStore } from "@/stores/socket";
 import { useUploadStore } from "@/stores/upload";
+import { useWebHaptics } from "web-haptics/vue";
 
 const router = useRouter();
 const gameStore = useGameStore();
 const socketStore = useSocketStore();
 const uploadSotre = useUploadStore();
+const { trigger } = useWebHaptics();
 
 const launchConfetti = () => {
   confetti({
@@ -61,6 +63,12 @@ const restart = () => {
 
 onMounted(() => {
   launchConfetti();
+  trigger([
+    { duration: 30 },
+    { delay: 60, duration: 200, intensity: 1 },
+    { delay: 60, duration: 200, intensity: 1 },
+    { delay: 60, duration: 200, intensity: 1 },
+  ]);
 });
 
 onBeforeUnmount(() => {
