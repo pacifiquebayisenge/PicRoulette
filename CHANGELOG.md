@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/pacifiquebayisenge/PicRoulette/compare/v1.5.7...v1.6.0) (2026-04-30)
+
+
+### Features
+
+* wake up server on launch ([1574a10](https://github.com/pacifiquebayisenge/PicRoulette/commit/1574a10d51cafa60bea901efcd67a88810a8e581))
+
 ## [1.5.7](https://github.com/pacifiquebayisenge/PicRoulette/compare/v1.5.6...v1.5.7) (2026-02-26)
 
 
